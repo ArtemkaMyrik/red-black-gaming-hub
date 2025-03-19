@@ -13,6 +13,8 @@ interface GameCardProps {
   platforms: string[];
   variant?: 'default' | 'horizontal';
   className?: string;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 const GameCard = ({
@@ -24,7 +26,9 @@ const GameCard = ({
   genre,
   platforms,
   variant = 'default',
-  className
+  className,
+  onMouseEnter,
+  onMouseLeave
 }: GameCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -54,8 +58,14 @@ const GameCard = ({
           isHovered && "shadow-xl",
           className
         )}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={() => {
+          setIsHovered(true);
+          onMouseEnter && onMouseEnter();
+        }}
+        onMouseLeave={() => {
+          setIsHovered(false);
+          onMouseLeave && onMouseLeave();
+        }}
       >
         <div className="w-1/3 h-full relative overflow-hidden">
           <img 
@@ -120,8 +130,14 @@ const GameCard = ({
         isHovered && "shadow-xl transform translate-y-[-5px]",
         className
       )}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        onMouseEnter && onMouseEnter();
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        onMouseLeave && onMouseLeave();
+      }}
     >
       <div className="relative aspect-[3/4] overflow-hidden">
         <img 
