@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -52,6 +53,16 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				gaming: {
+					red: '#ea384c',
+					'red-hover': '#ff4a5f',
+					dark: '#121212',
+					'dark-accent': '#1a1a1a',
+					'card-bg': '#1c1c1c',
+					'card-hover': '#222222',
+					'text-primary': '#ffffff',
+					'text-secondary': '#a0a0a0',
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -84,12 +95,60 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' }
+				},
+				'fade-up': {
+					'0%': { opacity: '0', transform: 'translateY(20px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
+				'pulse-slow': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.8' }
+				},
+				'slide-in-right': {
+					'0%': { transform: 'translateX(100%)' },
+					'100%': { transform: 'translateX(0)' }
+				},
+				'slide-in-left': {
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(0)' }
+				},
+				'scale-up': {
+					'0%': { transform: 'scale(0.95)' },
+					'100%': { transform: 'scale(1)' }
+				},
+				'bg-pulse': {
+          '0%, 100%': { 
+            'background-position': '0% 50%' 
+          },
+          '50%': { 
+            'background-position': '100% 50%' 
+          }
+        },
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.5s ease-out',
+				'fade-up': 'fade-up 0.5s ease-out',
+				'pulse-slow': 'pulse-slow 3s infinite ease-in-out',
+				'slide-in-right': 'slide-in-right 0.5s ease-out',
+				'slide-in-left': 'slide-in-left 0.5s ease-out',
+				'scale-up': 'scale-up 0.3s ease-out',
+				'bg-pulse': 'bg-pulse 3s ease infinite',
+			},
+			fontFamily: {
+				'sans': ['Inter', 'Helvetica', 'Arial', 'sans-serif'],
+			},
+			backgroundImage: {
+				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+				'hero-pattern': 'linear-gradient(to bottom, rgba(18, 18, 18, 0.7), rgba(18, 18, 18, 1)), url("/hero-bg.jpg")',
+				'card-gradient': 'linear-gradient(to bottom, rgba(28, 28, 28, 0.5), rgba(18, 18, 18, 1))',
+				'red-glow': 'radial-gradient(circle at center, rgba(234, 56, 76, 0.3) 0%, transparent 70%)',
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
