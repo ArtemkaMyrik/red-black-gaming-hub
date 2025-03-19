@@ -9,6 +9,7 @@ import Games from "./pages/Games";
 import GameDetail from "./pages/GameDetail";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
+import UserProfile from "./pages/UserProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/games/:id" element={<GameDetail />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogDetail />} />
+          <Route path="/profile/:id" element={<UserProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
