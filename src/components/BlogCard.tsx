@@ -1,5 +1,6 @@
 
-import { Calendar, MessageSquare, ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Calendar, MessageSquare, ArrowUpRight, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface BlogCardProps {
@@ -12,6 +13,7 @@ interface BlogCardProps {
   date: string;
   commentsCount: number;
   category: string;
+  rating?: number;
   className?: string;
 }
 
@@ -25,6 +27,7 @@ const BlogCard = ({
   date,
   commentsCount,
   category,
+  rating,
   className
 }: BlogCardProps) => {
   return (
@@ -44,12 +47,22 @@ const BlogCard = ({
         <div className="absolute top-4 left-4 bg-gaming-red/90 text-white text-xs font-medium px-2 py-1 rounded">
           {category}
         </div>
+        
+        {/* Рейтинг статьи */}
+        {rating && (
+          <div className="absolute top-4 right-4 bg-black/60 text-white text-xs flex items-center gap-1 px-2 py-1 rounded">
+            <Star size={12} className="fill-gaming-red text-gaming-red" />
+            <span>{rating.toFixed(1)}</span>
+          </div>
+        )}
       </div>
       
       <div className="p-4">
-        <h3 className="text-xl font-bold line-clamp-2 group-hover:text-gaming-red transition-colors">
-          {title}
-        </h3>
+        <Link to={`/blog/${id}`}>
+          <h3 className="text-xl font-bold line-clamp-2 group-hover:text-gaming-red transition-colors">
+            {title}
+          </h3>
+        </Link>
         
         <p className="mt-2 text-sm text-gaming-text-secondary line-clamp-2">
           {excerpt}
@@ -85,13 +98,13 @@ const BlogCard = ({
         </div>
         
         <div className="mt-4 pt-4 border-t border-white/5 flex justify-end">
-          <a 
-            href={`/blog/${id}`}
+          <Link 
+            to={`/blog/${id}`}
             className="inline-flex items-center gap-1 text-sm text-gaming-text-secondary group-hover:text-gaming-red transition-colors"
           >
-            Read Article
+            Читать статью
             <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
+          </Link>
         </div>
       </div>
     </div>
