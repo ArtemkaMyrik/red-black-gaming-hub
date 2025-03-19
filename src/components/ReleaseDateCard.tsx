@@ -25,7 +25,7 @@ const ReleaseDateCard = ({
   isReleased = false,
   className
 }: ReleaseDateCardProps) => {
-  // Format platforms to display icons or short names
+  // Форматирование платформ для отображения иконок или коротких названий
   const getPlatformLabel = (platform: string) => {
     switch (platform.toLowerCase()) {
       case 'pc':
@@ -88,10 +88,10 @@ const ReleaseDateCard = ({
               : "text-gaming-text-secondary"
         )}>
           {isReleased 
-            ? 'Released' 
+            ? 'Выпущена' 
             : daysUntilRelease === 0 
-              ? 'Releases Today!' 
-              : `${daysUntilRelease} days left`}
+              ? 'Выходит сегодня!' 
+              : `${daysUntilRelease} дн. до выхода`}
         </div>
       </div>
       

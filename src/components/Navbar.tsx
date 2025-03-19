@@ -22,11 +22,11 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Games', path: '/games' },
-    { name: 'Reviews', path: '/reviews' },
-    { name: 'Blog', path: '/blog' },
-    { name: 'Release Calendar', path: '/releases' },
+    { name: 'Главная', path: '/' },
+    { name: 'Игры', path: '/games' },
+    { name: 'Обзоры', path: '/reviews' },
+    { name: 'Блог', path: '/blog' },
+    { name: 'Календарь релизов', path: '/releases' },
   ];
 
   return (
@@ -42,7 +42,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gaming-red to-white">
-              GamerHub
+              ИгроХаб
             </span>
           </Link>
 

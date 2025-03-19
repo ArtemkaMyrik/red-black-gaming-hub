@@ -32,7 +32,7 @@ const GameCard = ({
 }: GameCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  // Format platforms to display icons or short names
+  // Форматирование платформ для отображения иконок или коротких названий
   const getPlatformLabel = (platform: string) => {
     switch (platform.toLowerCase()) {
       case 'pc':
@@ -171,7 +171,7 @@ const GameCard = ({
             href={`/games/${id}`}
             className="inline-flex items-center gap-1 text-sm text-white hover:text-gaming-red transition-colors"
           >
-            View Details
+            Подробнее
             <ArrowUpRight size={14} />
           </a>
         </div>

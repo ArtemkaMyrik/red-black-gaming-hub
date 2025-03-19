@@ -59,9 +59,9 @@ const TopGames = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold">Top Rated Games</h2>
+            <h2 className="text-2xl md:text-3xl font-bold">Лучшие игры</h2>
             <p className="text-gaming-text-secondary mt-2">
-              Our selection of the highest-rated games of all time
+              Наша подборка самых высоко оцененных игр всех времен
             </p>
           </div>
           
@@ -69,7 +69,7 @@ const TopGames = () => {
             href="/games"
             className="mt-4 md:mt-0 inline-flex items-center text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors"
           >
-            View All Games
+            Смотреть все игры
             <ChevronRight size={16} className="ml-1" />
           </a>
         </div>

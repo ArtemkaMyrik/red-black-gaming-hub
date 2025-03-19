@@ -38,9 +38,9 @@ const GameRecommendations = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold">Recommended For You</h2>
+            <h2 className="text-2xl md:text-3xl font-bold">Рекомендации для вас</h2>
             <p className="text-gaming-text-secondary mt-2">
-              Personalized game suggestions based on your preferences
+              Персонализированные подборки игр на основе ваших предпочтений
             </p>
           </div>
           
@@ -48,7 +48,7 @@ const GameRecommendations = () => {
             href="/recommendations"
             className="mt-4 md:mt-0 inline-flex items-center text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors"
           >
-            More Recommendations
+            Больше рекомендаций
             <ChevronRight size={16} className="ml-1" />
           </a>
         </div>
