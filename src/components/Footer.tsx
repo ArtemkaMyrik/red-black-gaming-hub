@@ -1,150 +1,89 @@
-
-import { Mail, Github, Twitter, Instagram, Twitch, Youtube } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Twitter, Instagram, Youtube, Twitch } from 'lucide-react';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-  
   return (
-    <footer className="bg-gaming-dark-accent pt-16 pb-8 border-t border-gaming-card-bg">
+    <footer className="bg-gaming-card-bg border-t border-white/10 py-6">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Колонка 1 - О сайте */}
           <div>
-            <div className="mb-6">
-              <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gaming-red to-white">
-                GamerHub
-              </span>
-            </div>
-            <p className="text-sm text-gaming-text-secondary mb-6">
-              Your premium destination for gaming news, reviews, and community discussions.
-            </p>
-            <div className="flex gap-4">
-              <a 
-                href="#" 
-                className="text-gaming-text-secondary hover:text-gaming-red transition-colors"
-                aria-label="Twitter"
-              >
-                <Twitter size={20} />
-              </a>
-              <a 
-                href="#" 
-                className="text-gaming-text-secondary hover:text-gaming-red transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram size={20} />
-              </a>
-              <a 
-                href="#" 
-                className="text-gaming-text-secondary hover:text-gaming-red transition-colors"
-                aria-label="Youtube"
-              >
-                <Youtube size={20} />
-              </a>
-              <a 
-                href="#" 
-                className="text-gaming-text-secondary hover:text-gaming-red transition-colors"
-                aria-label="Twitch"
-              >
-                <Twitch size={20} />
-              </a>
-            </div>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-bold mb-4">Navigation</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="/" className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="/games" className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors">
-                  Games
-                </a>
-              </li>
-              <li>
-                <a href="/reviews" className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors">
-                  Reviews
-                </a>
-              </li>
-              <li>
-                <a href="/blog" className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="/releases" className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors">
-                  Release Calendar
-                </a>
-              </li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-bold mb-4">Support</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="/about" className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="/contact" className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors">
-                  Contact
-                </a>
-              </li>
-              <li>
-                <a href="/faq" className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors">
-                  FAQ
-                </a>
-              </li>
-              <li>
-                <a href="/privacy" className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="/terms" className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors">
-                  Terms of Service
-                </a>
-              </li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-bold mb-4">Newsletter</h3>
+            <h3 className="text-lg font-bold mb-3">Game<span className="text-gaming-red">Verse</span></h3>
             <p className="text-sm text-gaming-text-secondary mb-4">
-              Subscribe to our newsletter for the latest gaming news and exclusive content.
+              Ваш проводник в мире видеоигр. Обзоры, новости, общение с единомышленниками.
             </p>
-            <div className="flex">
-              <input
-                type="email"
-                placeholder="Your email"
-                className="bg-gaming-dark border border-white/10 text-sm rounded-l-sm px-4 py-2 w-full focus:outline-none focus:border-gaming-red transition-colors"
-              />
-              <button className="bg-gaming-red hover:bg-gaming-red-hover text-white px-4 py-2 rounded-r-sm transition-colors">
-                <Mail size={18} />
-              </button>
+            <div className="flex space-x-4">
+              <a href="#" className="text-gaming-text-secondary hover:text-gaming-red">
+                <Twitter className="h-5 w-5" />
+                <span className="sr-only">Twitter</span>
+              </a>
+              <a href="#" className="text-gaming-text-secondary hover:text-gaming-red">
+                <Instagram className="h-5 w-5" />
+                <span className="sr-only">Instagram</span>
+              </a>
+              <a href="#" className="text-gaming-text-secondary hover:text-gaming-red">
+                <Youtube className="h-5 w-5" />
+                <span className="sr-only">YouTube</span>
+              </a>
+              <a href="#" className="text-gaming-text-secondary hover:text-gaming-red">
+                <Twitch className="h-5 w-5" />
+                <span className="sr-only">Twitch</span>
+              </a>
             </div>
+          </div>
+          
+          {/* Колонка 2 - Разделы */}
+          <div>
+            <h3 className="text-lg font-bold mb-3">Разделы</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link to="/games" className="text-gaming-text-secondary hover:text-gaming-red">
+                  Игры
+                </Link>
+              </li>
+              <li>
+                <Link to="/blog" className="text-gaming-text-secondary hover:text-gaming-red">
+                  Блог
+                </Link>
+              </li>
+              <li>
+                <Link to="/groups" className="text-gaming-text-secondary hover:text-gaming-red">
+                  Группы
+                </Link>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Колонка 3 - Информация */}
+          <div>
+            <h3 className="text-lg font-bold mb-3">Информация</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link to="/about" className="text-gaming-text-secondary hover:text-gaming-red">
+                  О нас
+                </Link>
+              </li>
+              <li>
+                <Link to="/terms" className="text-gaming-text-secondary hover:text-gaming-red">
+                  Правила пользования
+                </Link>
+              </li>
+              <li>
+                <Link to="/support" className="text-gaming-text-secondary hover:text-gaming-red">
+                  Техническая поддержка
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="text-gaming-text-secondary hover:text-gaming-red">
+                  Политика конфиденциальности
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
         
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-xs text-gaming-text-secondary">
-            © {currentYear} GamerHub. All rights reserved.
-          </p>
-          
-          <div className="mt-4 md:mt-0">
-            <a 
-              href="https://github.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-xs text-gaming-text-secondary hover:text-gaming-red transition-colors"
-            >
-              <Github size={14} />
-              View on GitHub
-            </a>
-          </div>
+        <div className="mt-8 pt-4 border-t border-white/10 text-center text-xs text-gaming-text-secondary">
+          <p>© 2023-2024 GameVerse. Все права защищены.</p>
         </div>
       </div>
     </footer>
