@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { HelpCircle, MessageSquare, Faq, Mail } from 'lucide-react';
+import { HelpCircle, MessageSquare, HelpingHand, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -38,6 +38,13 @@ const Support = () => {
     setEmail('');
     setSubject('');
     setMessage('');
+  };
+
+  const switchToContactTab = () => {
+    const contactTabTrigger = document.querySelector('[data-value="contact"]') as HTMLElement;
+    if (contactTabTrigger) {
+      contactTabTrigger.click();
+    }
   };
   
   return (
@@ -142,7 +149,7 @@ const Support = () => {
               
               <TabsContent value="faq" className="bg-gaming-card-bg border border-white/10 rounded-lg p-6">
                 <div className="flex items-center mb-6">
-                  <Faq className="mr-3 text-gaming-red" size={24} />
+                  <HelpingHand className="mr-3 text-gaming-red" size={24} />
                   <h2 className="text-2xl font-bold">FAQ</h2>
                 </div>
                 
@@ -216,7 +223,7 @@ const Support = () => {
                   <Button 
                     variant="outline" 
                     className="mt-3 border-white/10"
-                    onClick={() => document.querySelector('[data-state="inactive"][data-value="contact"]')?.click()}
+                    onClick={switchToContactTab}
                   >
                     <HelpCircle className="mr-2" size={16} />
                     Связаться с поддержкой

@@ -1,7 +1,6 @@
-
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Building, Mail, GitHub } from 'lucide-react';
+import { Building, Mail, Github } from 'lucide-react';
 
 const About = () => {
   return (
@@ -92,7 +91,7 @@ const About = () => {
                   rel="noopener noreferrer" 
                   className="flex items-center bg-gaming-dark-accent rounded-lg p-4 hover:bg-gaming-red transition-colors"
                 >
-                  <GitHub className="mr-3" size={20} />
+                  <Github className="mr-3" size={20} />
                   <span>GitHub</span>
                 </a>
               </div>
