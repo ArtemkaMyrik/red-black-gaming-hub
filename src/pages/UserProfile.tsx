@@ -10,6 +10,7 @@ import ProfileFriends from '../components/ProfileFriends';
 import ProfileGroups from '../components/ProfileGroups';
 import ProfileMessages from '../components/ProfileMessages';
 import ProfileSettings from '../components/ProfileSettings';
+import SocialNavbar from '../components/SocialNavbar';
 
 // Интерфейсы для типов данных
 interface UserProfileData {
@@ -101,8 +102,13 @@ const UserProfile = () => {
         {/* Шапка профиля */}
         <ProfileHeader profile={profile} />
         
+        {/* Социальная навигация */}
+        <div className="container mx-auto px-4 md:px-6">
+          <SocialNavbar />
+        </div>
+        
         {/* Вкладки профиля */}
-        <div className="container mx-auto px-4 md:px-6 mt-8">
+        <div className="container mx-auto px-4 md:px-6 mt-2">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="border-b border-white/10 mb-6">
               <TabsList className="bg-transparent h-auto p-0 justify-start">
