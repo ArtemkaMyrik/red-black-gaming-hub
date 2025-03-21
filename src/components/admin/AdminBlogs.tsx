@@ -7,7 +7,7 @@ import { Search, Eye, Edit, Trash, CheckCircle, XCircle } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
-// Mock data
+// Mock data with properly typed status
 const mockBlogs = [
   { 
     id: 1, 
@@ -15,7 +15,7 @@ const mockBlogs = [
     author: 'GameReporter',
     category: 'Новости',
     publishDate: '20.12.2023',
-    status: 'approved' 
+    status: 'approved' as const 
   },
   { 
     id: 2, 
@@ -23,7 +23,7 @@ const mockBlogs = [
     author: 'CyberGuru',
     category: 'Обзоры',
     publishDate: '15.11.2023',
-    status: 'approved' 
+    status: 'approved' as const 
   },
   { 
     id: 3, 
@@ -31,7 +31,7 @@ const mockBlogs = [
     author: 'ProGamer',
     category: 'Гайды',
     publishDate: '05.01.2024',
-    status: 'pending' 
+    status: 'pending' as const 
   },
   { 
     id: 4, 
@@ -39,7 +39,7 @@ const mockBlogs = [
     author: 'RPGHistorian',
     category: 'История',
     publishDate: '10.02.2024',
-    status: 'pending' 
+    status: 'pending' as const 
   },
 ];
 

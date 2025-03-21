@@ -7,13 +7,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Search, Edit, Trash, PlusCircle, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
-// Mock data
+// Mock data with properly typed status
 const mockGames = [
-  { id: 1, title: 'Cyberpunk 2077', publisher: 'CD Projekt RED', releaseDate: '10.12.2020', status: 'approved' },
-  { id: 2, title: 'The Witcher 3', publisher: 'CD Projekt RED', releaseDate: '19.05.2015', status: 'approved' },
-  { id: 3, title: 'Elden Ring', publisher: 'FromSoftware', releaseDate: '25.02.2022', status: 'pending' },
-  { id: 4, title: 'Starfield', publisher: 'Bethesda', releaseDate: '06.09.2023', status: 'pending' },
-  { id: 5, title: 'Baldur\'s Gate 3', publisher: 'Larian Studios', releaseDate: '03.08.2023', status: 'approved' },
+  { id: 1, title: 'Cyberpunk 2077', publisher: 'CD Projekt RED', releaseDate: '10.12.2020', status: 'approved' as const },
+  { id: 2, title: 'The Witcher 3', publisher: 'CD Projekt RED', releaseDate: '19.05.2015', status: 'approved' as const },
+  { id: 3, title: 'Elden Ring', publisher: 'FromSoftware', releaseDate: '25.02.2022', status: 'pending' as const },
+  { id: 4, title: 'Starfield', publisher: 'Bethesda', releaseDate: '06.09.2023', status: 'pending' as const },
+  { id: 5, title: 'Baldur\'s Gate 3', publisher: 'Larian Studios', releaseDate: '03.08.2023', status: 'approved' as const },
 ];
 
 interface Game {

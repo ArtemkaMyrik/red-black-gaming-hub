@@ -7,39 +7,39 @@ import { Search, UserCog, Shield, Ban, User, BadgeCheck } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
-// Mock data
+// Mock data with properly typed status and role
 const mockUsers = [
   { 
     id: 1, 
     username: 'Игроман2000', 
     email: 'gamer2000@example.com',
-    role: 'user',
+    role: 'user' as const,
     joinDate: '15.04.2023',
-    status: 'active' 
+    status: 'active' as const 
   },
   { 
     id: 2, 
     username: 'ProGamer', 
     email: 'progamer@example.com',
-    role: 'moderator',
+    role: 'moderator' as const,
     joinDate: '10.01.2023',
-    status: 'active' 
+    status: 'active' as const 
   },
   { 
     id: 3, 
     username: 'GameReporter', 
     email: 'reporter@example.com',
-    role: 'admin',
+    role: 'admin' as const,
     joinDate: '05.12.2022',
-    status: 'active' 
+    status: 'active' as const 
   },
   { 
     id: 4, 
     username: 'ToxicPlayer', 
     email: 'toxic@example.com',
-    role: 'user',
+    role: 'user' as const,
     joinDate: '20.07.2023',
-    status: 'banned' 
+    status: 'banned' as const 
   },
 ];
 

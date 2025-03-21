@@ -7,7 +7,7 @@ import { Search, Eye, CheckCircle, XCircle, Trash } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
-// Mock data
+// Mock data with properly typed status
 const mockReviews = [
   { 
     id: 1, 
@@ -16,7 +16,7 @@ const mockReviews = [
     rating: 4,
     text: 'Отличная игра, но много багов на старте. Сейчас все исправлено и играть одно удовольствие!',
     date: '15.01.2023',
-    status: 'approved' 
+    status: 'approved' as const 
   },
   { 
     id: 2, 
@@ -25,7 +25,7 @@ const mockReviews = [
     rating: 5,
     text: 'Лучшая RPG всех времен! Невероятный сюжет, персонажи, музыка - все на высшем уровне.',
     date: '22.05.2022',
-    status: 'approved' 
+    status: 'approved' as const 
   },
   { 
     id: 3, 
@@ -34,7 +34,7 @@ const mockReviews = [
     rating: 5,
     text: 'Шедевр от FromSoftware. Открытый мир внес свежесть в формулу соулс-игр.',
     date: '10.03.2022',
-    status: 'pending' 
+    status: 'pending' as const 
   },
   { 
     id: 4, 
@@ -43,7 +43,7 @@ const mockReviews = [
     rating: 2,
     text: 'Слишком много багов и неудобный интерфейс. Не рекомендую к покупке.',
     date: '15.08.2023',
-    status: 'pending' 
+    status: 'pending' as const 
   },
 ];
 
