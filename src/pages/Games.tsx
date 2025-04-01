@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Search, Filter, Calendar, Trophy, List, Grid3X3 } from 'lucide-react';
@@ -8,6 +7,7 @@ import Navbar from '../components/Navbar';
 import GameCard from '../components/GameCard';
 import ReleaseCalendar from '../components/ReleaseCalendar';
 import Footer from '../components/Footer';
+import CurationGamesDialog from '../components/CurationGamesDialog';
 
 // Примеры игр для демонстрации
 const allGames = [
@@ -117,6 +117,8 @@ const Games = () => {
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [selectedYears, setSelectedYears] = useState<number[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [showCurationDialog, setShowCurationDialog] = useState(false);
+  const [selectedCuration, setSelectedCuration] = useState<{id: number, title: string} | null>(null);
   
   // Эффект прокрутки наверх при загрузке страницы
   useEffect(() => {
@@ -157,6 +159,18 @@ const Games = () => {
     if (!curation) return [];
     
     return allGames.filter(game => curation.games.includes(game.id));
+  };
+
+  // Обработчик для открытия диалога подборки
+  const handleOpenCuration = (curationId: number) => {
+    const curation = gameCurations.find(c => c.id === curationId);
+    if (!curation) return;
+    
+    setSelectedCuration({
+      id: curation.id,
+      title: curation.title
+    });
+    setShowCurationDialog(true);
   };
 
   // Переключение состояния фильтра жанра
@@ -389,9 +403,12 @@ const Games = () => {
               <div key={curation.id} className="mb-10">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-medium">{curation.title}</h3>
-                  <a href={`/curations/${curation.id}`} className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors">
+                  <button 
+                    onClick={() => handleOpenCuration(curation.id)} 
+                    className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors"
+                  >
                     Смотреть все
-                  </a>
+                  </button>
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -407,6 +424,16 @@ const Games = () => {
           </TabsContent>
         </Tabs>
       </main>
+      
+      {/* Диалог с играми из подборки */}
+      {selectedCuration && (
+        <CurationGamesDialog
+          open={showCurationDialog}
+          onOpenChange={setShowCurationDialog}
+          title={selectedCuration.title}
+          games={getCurationGames(selectedCuration.id)}
+        />
+      )}
       
       <Footer />
     </div>

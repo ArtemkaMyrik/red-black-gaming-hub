@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Star, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
 
 interface GameCardProps {
   id: number;
@@ -67,7 +68,7 @@ const GameCard = ({
           onMouseLeave && onMouseLeave();
         }}
       >
-        <div className="w-1/3 h-full relative overflow-hidden">
+        <Link to={`/games/${id}`} className="w-1/3 h-full relative overflow-hidden">
           <img 
             src={imageUrl} 
             alt={title}
@@ -80,7 +81,7 @@ const GameCard = ({
             <Star size={12} className="mr-1" fill="white" />
             {rating.toFixed(1)}
           </div>
-        </div>
+        </Link>
         
         <div className="w-2/3 p-4 flex flex-col justify-between">
           <div>
@@ -106,8 +107,8 @@ const GameCard = ({
               ))}
             </div>
             
-            <a 
-              href={`/games/${id}`}
+            <Link 
+              to={`/games/${id}`}
               className={cn(
                 "p-1 rounded-full",
                 isHovered 
@@ -116,7 +117,7 @@ const GameCard = ({
               )}
             >
               <ArrowUpRight size={18} />
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -139,7 +140,7 @@ const GameCard = ({
         onMouseLeave && onMouseLeave();
       }}
     >
-      <div className="relative aspect-[3/4] overflow-hidden">
+      <Link to={`/games/${id}`} className="relative aspect-[3/4] overflow-hidden block">
         <img 
           src={imageUrl} 
           alt={title}
@@ -167,15 +168,14 @@ const GameCard = ({
             ))}
           </div>
           
-          <a 
-            href={`/games/${id}`}
+          <span 
             className="inline-flex items-center gap-1 text-sm text-white hover:text-gaming-red transition-colors"
           >
             Подробнее
             <ArrowUpRight size={14} />
-          </a>
+          </span>
         </div>
-      </div>
+      </Link>
       
       <div className="p-3">
         <h3 className="text-base font-bold line-clamp-1 group-hover:text-gaming-red transition-colors">
