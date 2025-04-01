@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Search, Filter, Calendar, Trophy, List, Grid3X3 } from 'lucide-react';
+import { Search, Filter, Calendar, Trophy, List, Grid3X3, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 import Navbar from '../components/Navbar';
 import GameCard from '../components/GameCard';
@@ -85,21 +87,24 @@ const allGames = [
   }
 ];
 
-// Примеры подборок игр
-const gameCurations = [
+// Примеры подборок игр (превращаем в state для возможности добавления)
+const initialGameCurations = [
   {
     id: 1,
     title: 'Лучшие RPG 2023',
+    category: 'RPG',
     games: [1, 6, 8]
   },
   {
     id: 2,
     title: 'Классика жанра хоррор',
+    category: 'Хоррор',
     games: [3, 5]
   },
   {
     id: 3,
     title: 'Игры с открытым миром',
+    category: 'Открытый мир',
     games: [1, 2, 4, 6]
   }
 ];
@@ -119,6 +124,8 @@ const Games = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showCurationDialog, setShowCurationDialog] = useState(false);
   const [selectedCuration, setSelectedCuration] = useState<{id: number, title: string} | null>(null);
+  const [showCreateCurationDialog, setShowCreateCurationDialog] = useState(false);
+  const [gameCurations, setGameCurations] = useState(initialGameCurations);
   
   // Эффект прокрутки наверх при загрузке страницы
   useEffect(() => {
@@ -171,6 +178,19 @@ const Games = () => {
       title: curation.title
     });
     setShowCurationDialog(true);
+  };
+
+  // Обработчик создания новой подборки
+  const handleCreateCuration = (curation: { title: string; category: string; games: number[] }) => {
+    const newCuration = {
+      id: gameCurations.length + 1,
+      title: curation.title,
+      category: curation.category,
+      games: curation.games
+    };
+    
+    setGameCurations(prev => [...prev, newCuration]);
+    toast.success('Подборка успешно создана!');
   };
 
   // Переключение состояния фильтра жанра
@@ -397,12 +417,28 @@ const Games = () => {
           </TabsContent>
           
           <TabsContent value="curated" className="mt-6">
-            <h2 className="text-xl font-bold mb-4">Тематические подборки игр</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold">Тематические подборки игр</h2>
+              <Button 
+                onClick={() => setShowCreateCurationDialog(true)}
+                className="bg-gaming-red hover:bg-gaming-red/90 text-white"
+              >
+                <Plus size={16} className="mr-2" />
+                Создать подборку
+              </Button>
+            </div>
             
             {gameCurations.map(curation => (
               <div key={curation.id} className="mb-10">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-medium">{curation.title}</h3>
+                  <div>
+                    <h3 className="text-lg font-medium">{curation.title}</h3>
+                    {curation.category && (
+                      <p className="text-sm text-gaming-text-secondary">
+                        Категория: {curation.category}
+                      </p>
+                    )}
+                  </div>
                   <button 
                     onClick={() => handleOpenCuration(curation.id)} 
                     className="text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors"
@@ -421,6 +457,19 @@ const Games = () => {
                 </div>
               </div>
             ))}
+            
+            {gameCurations.length === 0 && (
+              <div className="text-center py-12 bg-gaming-card-bg border border-white/5 rounded-md">
+                <p className="text-gaming-text-secondary mb-4">У вас пока нет подборок</p>
+                <Button 
+                  onClick={() => setShowCreateCurationDialog(true)}
+                  className="bg-gaming-red hover:bg-gaming-red/90 text-white"
+                >
+                  <Plus size={16} className="mr-2" />
+                  Создать первую подборку
+                </Button>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </main>
@@ -434,6 +483,17 @@ const Games = () => {
           games={getCurationGames(selectedCuration.id)}
         />
       )}
+      
+      {/* Диалог создания новой подборки */}
+      <CurationGamesDialog
+        open={showCreateCurationDialog}
+        onOpenChange={setShowCreateCurationDialog}
+        title="Создание новой подборки"
+        games={[]}
+        mode="create"
+        onCreateCuration={handleCreateCuration}
+        allGames={allGames}
+      />
       
       <Footer />
     </div>

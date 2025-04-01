@@ -1,8 +1,9 @@
 
-import { useState } from 'react';
-import { X, Search } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { X, Search, Plus, Check } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import GameCard from './GameCard';
 
 interface CurationGame {
@@ -20,21 +21,69 @@ interface CurationGamesDialogProps {
   onOpenChange: (open: boolean) => void;
   title: string;
   games: CurationGame[];
+  mode?: 'view' | 'create';
+  onCreateCuration?: (curation: { title: string; category: string; games: number[] }) => void;
+  allGames?: CurationGame[];
 }
 
-const CurationGamesDialog = ({ open, onOpenChange, title, games }: CurationGamesDialogProps) => {
+const CurationGamesDialog = ({ 
+  open, 
+  onOpenChange, 
+  title, 
+  games, 
+  mode = 'view', 
+  onCreateCuration,
+  allGames = [] 
+}: CurationGamesDialogProps) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [curationTitle, setCurationTitle] = useState('');
+  const [curationCategory, setCurationCategory] = useState('');
+  const [selectedGames, setSelectedGames] = useState<number[]>([]);
 
-  const filteredGames = games.filter(game => 
-    game.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Сбрасываем состояние при открытии/закрытии диалога
+  useEffect(() => {
+    if (open && mode === 'create') {
+      setCurationTitle('');
+      setCurationCategory('');
+      setSelectedGames([]);
+    }
+  }, [open, mode]);
+
+  const filteredGames = mode === 'create' 
+    ? allGames.filter(game => game.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    : games.filter(game => game.title.toLowerCase().includes(searchQuery.toLowerCase()));
+
+  const handleGameSelect = (gameId: number) => {
+    setSelectedGames(prev => 
+      prev.includes(gameId) 
+        ? prev.filter(id => id !== gameId) 
+        : [...prev, gameId]
+    );
+  };
+
+  const handleCreateCuration = () => {
+    if (!curationTitle) {
+      // TODO: добавить уведомление об ошибке
+      return;
+    }
+
+    onCreateCuration?.({
+      title: curationTitle,
+      category: curationCategory,
+      games: selectedGames
+    });
+
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-gaming-card-bg border-white/10 max-w-5xl max-h-[90vh] overflow-y-auto p-6">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl font-bold">{title}</DialogTitle>
+            <DialogTitle className="text-xl font-bold">
+              {mode === 'create' ? 'Создание новой подборки' : title}
+            </DialogTitle>
             <Button
               variant="ghost"
               size="icon"
@@ -45,6 +94,39 @@ const CurationGamesDialog = ({ open, onOpenChange, title, games }: CurationGames
             </Button>
           </div>
         </DialogHeader>
+        
+        {mode === 'create' && (
+          <div className="mt-4 space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Название подборки</label>
+              <Input
+                type="text"
+                placeholder="Введите название подборки"
+                value={curationTitle}
+                onChange={(e) => setCurationTitle(e.target.value)}
+                className="w-full bg-gaming-dark border border-white/5 rounded-md"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-1">Категория</label>
+              <Input
+                type="text"
+                placeholder="Например: RPG, Приключения, Стратегии"
+                value={curationCategory}
+                onChange={(e) => setCurationCategory(e.target.value)}
+                className="w-full bg-gaming-dark border border-white/5 rounded-md"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Выберите игры для подборки</label>
+              <p className="text-xs text-gaming-text-secondary mb-3">
+                Отметьте игры, которые хотите добавить в подборку
+              </p>
+            </div>
+          </div>
+        )}
         
         <div className="mt-4 mb-6">
           <div className="relative">
@@ -62,10 +144,26 @@ const CurationGamesDialog = ({ open, onOpenChange, title, games }: CurationGames
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filteredGames.length > 0 ? (
             filteredGames.map((game) => (
-              <GameCard
-                key={game.id}
-                {...game}
-              />
+              <div key={game.id} className="relative">
+                {mode === 'create' && (
+                  <button
+                    onClick={() => handleGameSelect(game.id)}
+                    className={`absolute right-2 top-2 z-10 w-6 h-6 rounded-full flex items-center justify-center ${
+                      selectedGames.includes(game.id)
+                        ? 'bg-gaming-red text-white'
+                        : 'bg-gaming-dark/80 text-gaming-text-secondary'
+                    }`}
+                  >
+                    {selectedGames.includes(game.id) ? <Check size={14} /> : <Plus size={14} />}
+                  </button>
+                )}
+                <GameCard
+                  {...game}
+                  className={mode === 'create' && selectedGames.includes(game.id) 
+                    ? 'ring-2 ring-gaming-red' 
+                    : ''}
+                />
+              </div>
             ))
           ) : (
             <div className="col-span-full text-center py-8 text-gaming-text-secondary">
@@ -73,6 +171,25 @@ const CurationGamesDialog = ({ open, onOpenChange, title, games }: CurationGames
             </div>
           )}
         </div>
+
+        {mode === 'create' && (
+          <div className="mt-6 flex justify-end">
+            <Button 
+              variant="outline" 
+              className="mr-2"
+              onClick={() => onOpenChange(false)}
+            >
+              Отмена
+            </Button>
+            <Button 
+              className="bg-gaming-red hover:bg-gaming-red/90"
+              onClick={handleCreateCuration}
+              disabled={!curationTitle || selectedGames.length === 0}
+            >
+              Создать подборку
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
