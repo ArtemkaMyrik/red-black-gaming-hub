@@ -8,11 +8,14 @@ import AdminReviews from '../components/admin/AdminReviews';
 import AdminBlogs from '../components/admin/AdminBlogs';
 import AdminUsers from '../components/admin/AdminUsers';
 import AdminLogin from '../components/admin/AdminLogin';
-import { Shield } from 'lucide-react';
+import AdminGameForm from '../components/admin/AdminGameForm';
+import { Shield, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const AdminPanel = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState('games');
+  const [isAddingGame, setIsAddingGame] = useState(false);
 
   // Mock login - in a real app, this would verify credentials against a backend
   const handleLogin = (credentials: { username: string; password: string }) => {
@@ -38,7 +41,10 @@ const AdminPanel = () => {
             <h1 className="text-2xl font-bold">Панель администратора</h1>
           </div>
           
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs value={activeTab} onValueChange={(value) => {
+            setActiveTab(value);
+            setIsAddingGame(false);
+          }} className="w-full">
             <TabsList className="bg-gaming-dark-accent mb-6 w-full grid grid-cols-2 md:grid-cols-4">
               <TabsTrigger value="games" className="data-[state=active]:bg-gaming-red">
                 Игры
@@ -55,7 +61,35 @@ const AdminPanel = () => {
             </TabsList>
             
             <TabsContent value="games">
-              <AdminGames />
+              {isAddingGame ? (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-bold">Добавление новой игры</h2>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setIsAddingGame(false)}
+                      className="border-white/10"
+                    >
+                      Вернуться к списку
+                    </Button>
+                  </div>
+                  <AdminGameForm />
+                </>
+              ) : (
+                <>
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-bold">Управление играми</h2>
+                    <Button 
+                      onClick={() => setIsAddingGame(true)}
+                      className="bg-gaming-red hover:bg-gaming-red/90"
+                    >
+                      <Plus size={16} className="mr-2" />
+                      Добавить игру
+                    </Button>
+                  </div>
+                  <AdminGames />
+                </>
+              )}
             </TabsContent>
             
             <TabsContent value="reviews">

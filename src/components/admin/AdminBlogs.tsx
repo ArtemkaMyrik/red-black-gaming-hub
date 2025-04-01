@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Eye, Edit, Trash, CheckCircle, XCircle } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Search, Eye, Edit, Trash, CheckCircle, XCircle, Image } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
 // Mock data with properly typed status
@@ -15,7 +15,11 @@ const mockBlogs = [
     author: 'GameReporter',
     category: 'Новости',
     publishDate: '20.12.2023',
-    status: 'approved' as const 
+    status: 'approved' as const,
+    images: [
+      'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070',
+      'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070'
+    ]
   },
   { 
     id: 2, 
@@ -23,7 +27,10 @@ const mockBlogs = [
     author: 'CyberGuru',
     category: 'Обзоры',
     publishDate: '15.11.2023',
-    status: 'approved' as const 
+    status: 'approved' as const,
+    images: [
+      'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=2030'
+    ]
   },
   { 
     id: 3, 
@@ -31,7 +38,8 @@ const mockBlogs = [
     author: 'ProGamer',
     category: 'Гайды',
     publishDate: '05.01.2024',
-    status: 'pending' as const 
+    status: 'pending' as const,
+    images: []
   },
   { 
     id: 4, 
@@ -39,7 +47,11 @@ const mockBlogs = [
     author: 'RPGHistorian',
     category: 'История',
     publishDate: '10.02.2024',
-    status: 'pending' as const 
+    status: 'pending' as const,
+    images: [
+      'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?q=80&w=2070',
+      'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=2070'
+    ]
   },
 ];
 
@@ -51,6 +63,7 @@ interface Blog {
   publishDate: string;
   status: 'approved' | 'pending' | 'rejected';
   content?: string;
+  images?: string[];
 }
 
 const AdminBlogs = () => {
@@ -58,6 +71,7 @@ const AdminBlogs = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const [isBlogDialogOpen, setIsBlogDialogOpen] = useState(false);
+  const [isImagesDialogOpen, setIsImagesDialogOpen] = useState(false);
   
   const filteredBlogs = blogs.filter(blog => 
     blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -92,6 +106,11 @@ const AdminBlogs = () => {
       content: "Это тестовый контент для блога. В реальном приложении здесь будет полный текст статьи с форматированием. Представьте, что здесь много текста с заголовками, списками, изображениями и т.д."
     });
     setIsBlogDialogOpen(true);
+  };
+
+  const viewImages = (blog: Blog) => {
+    setSelectedBlog(blog);
+    setIsImagesDialogOpen(true);
   };
   
   return (
@@ -155,6 +174,16 @@ const AdminBlogs = () => {
                       >
                         <Eye size={16} />
                       </Button>
+                      {blog.images && blog.images.length > 0 && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => viewImages(blog)}
+                          className="h-8 w-8 p-0 text-gaming-text-secondary hover:text-white"
+                        >
+                          <Image size={16} />
+                        </Button>
+                      )}
                       {blog.status === 'pending' && (
                         <>
                           <Button
@@ -205,10 +234,14 @@ const AdminBlogs = () => {
         </Table>
       </div>
       
+      {/* Диалог просмотра статьи */}
       <Dialog open={isBlogDialogOpen} onOpenChange={setIsBlogDialogOpen}>
         <DialogContent className="bg-gaming-card-bg border-white/10 max-w-3xl">
           <DialogHeader>
             <DialogTitle>Просмотр статьи</DialogTitle>
+            <DialogDescription>
+              Просмотр содержания и деталей статьи
+            </DialogDescription>
           </DialogHeader>
           
           {selectedBlog && (
@@ -234,6 +267,19 @@ const AdminBlogs = () => {
                 <h3 className="text-sm font-medium text-gaming-text-secondary">Содержание</h3>
                 <p className="mt-1 p-3 bg-gaming-dark rounded-md whitespace-pre-line">{selectedBlog.content}</p>
               </div>
+              
+              {selectedBlog.images && selectedBlog.images.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-gaming-text-secondary">Изображения ({selectedBlog.images.length})</h3>
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    {selectedBlog.images.map((img, idx) => (
+                      <div key={idx} className="aspect-video bg-gaming-dark rounded-md overflow-hidden">
+                        <img src={img} alt={`Изображение ${idx + 1}`} className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               
               <div className="flex justify-end gap-2 pt-2">
                 {selectedBlog.status === 'pending' && (
@@ -270,6 +316,53 @@ const AdminBlogs = () => {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Диалог просмотра изображений */}
+      <Dialog open={isImagesDialogOpen} onOpenChange={setIsImagesDialogOpen}>
+        <DialogContent className="bg-gaming-card-bg border-white/10 max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Изображения статьи</DialogTitle>
+            <DialogDescription>
+              {selectedBlog?.title}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedBlog && selectedBlog.images && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              {selectedBlog.images.map((img, idx) => (
+                <div key={idx} className="group relative rounded-lg overflow-hidden bg-gaming-dark">
+                  <img 
+                    src={img} 
+                    alt={`Изображение ${idx + 1}`} 
+                    className="w-full aspect-video object-cover" 
+                  />
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-white/20 bg-black/50 hover:bg-black/70"
+                      onClick={() => window.open(img, '_blank')}
+                    >
+                      <Eye size={16} className="mr-2" />
+                      Просмотр
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          <div className="flex justify-end mt-4">
+            <Button 
+              variant="outline"
+              onClick={() => setIsImagesDialogOpen(false)}
+              className="border-white/10"
+            >
+              Закрыть
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

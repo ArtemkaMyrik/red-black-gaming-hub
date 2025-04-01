@@ -9,6 +9,7 @@ import ProfileActivity from '../components/ProfileActivity';
 import ProfileFriends from '../components/ProfileFriends';
 import ProfileGroups from '../components/ProfileGroups';
 import ProfileSettings from '../components/ProfileSettings';
+import ProfileFavoriteGames from '../components/ProfileFavoriteGames';
 import SocialNavbar from '../components/SocialNavbar';
 
 // Интерфейсы для типов данных
@@ -120,6 +121,12 @@ const UserProfile = () => {
                   Активность
                 </TabsTrigger>
                 <TabsTrigger 
+                  value="favorite" 
+                  className="px-6 py-3 border-b-2 border-transparent data-[state=active]:border-gaming-red rounded-none bg-transparent"
+                >
+                  Избранное
+                </TabsTrigger>
+                <TabsTrigger 
                   value="friends" 
                   className="px-6 py-3 border-b-2 border-transparent data-[state=active]:border-gaming-red rounded-none bg-transparent"
                 >
@@ -142,6 +149,10 @@ const UserProfile = () => {
             
             <TabsContent value="activity" className="mt-0">
               <ProfileActivity userId={profile.id} />
+            </TabsContent>
+            
+            <TabsContent value="favorite" className="mt-0">
+              <ProfileFavoriteGames userId={profile.id} />
             </TabsContent>
             
             <TabsContent value="friends" className="mt-0">
