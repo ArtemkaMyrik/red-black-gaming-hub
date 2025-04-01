@@ -16,6 +16,9 @@ import Terms from "./pages/Terms";
 import Support from "./pages/Support";
 import NotFound from "./pages/NotFound";
 import AdminPanel from "./pages/AdminPanel";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import ForgotPassword from "./pages/ForgotPassword";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +41,9 @@ const App = () => (
           <Route path="/terms" element={<Terms />} />
           <Route path="/support" element={<Support />} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -8,7 +8,6 @@ import ProfileHeader from '../components/ProfileHeader';
 import ProfileActivity from '../components/ProfileActivity';
 import ProfileFriends from '../components/ProfileFriends';
 import ProfileGroups from '../components/ProfileGroups';
-import ProfileMessages from '../components/ProfileMessages';
 import ProfileSettings from '../components/ProfileSettings';
 import SocialNavbar from '../components/SocialNavbar';
 
@@ -27,7 +26,9 @@ interface UserProfileData {
 
 const UserProfile = () => {
   const { id } = useParams<{ id: string }>();
-  const [activeTab, setActiveTab] = useState("activity");
+  const [searchParams] = useSearchParams();
+  const tabFromUrl = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(tabFromUrl || "activity");
   const [profile, setProfile] = useState<UserProfileData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -131,12 +132,6 @@ const UserProfile = () => {
                   Группы
                 </TabsTrigger>
                 <TabsTrigger 
-                  value="messages" 
-                  className="px-6 py-3 border-b-2 border-transparent data-[state=active]:border-gaming-red rounded-none bg-transparent"
-                >
-                  Сообщения
-                </TabsTrigger>
-                <TabsTrigger 
                   value="settings" 
                   className="px-6 py-3 border-b-2 border-transparent data-[state=active]:border-gaming-red rounded-none bg-transparent"
                 >
@@ -155,10 +150,6 @@ const UserProfile = () => {
             
             <TabsContent value="groups" className="mt-0">
               <ProfileGroups userId={profile.id} />
-            </TabsContent>
-            
-            <TabsContent value="messages" className="mt-0">
-              <ProfileMessages userId={profile.id} />
             </TabsContent>
             
             <TabsContent value="settings" className="mt-0">
