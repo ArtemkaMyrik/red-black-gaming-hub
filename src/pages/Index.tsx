@@ -10,7 +10,7 @@ import GameRecommendations from '../components/GameRecommendations';
 import Footer from '../components/Footer';
 
 const Index = () => {
-  // Scroll to top on page load
+  // Прокрутка вверх при загрузке страницы
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Menu, X, HelpCircle, Bell } from 'lucide-react';
+import { Menu, X, HelpCircle } from 'lucide-react';
 import GlobalSearch from './GlobalSearch';
 import Messages from './Messages';
 
@@ -59,14 +59,6 @@ const Navbar = () => {
             
             {/* Messages */}
             <Messages />
-            
-            {/* Notifications */}
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell size={20} />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-gaming-red text-white text-xs rounded-full flex items-center justify-center">
-                3
-              </span>
-            </Button>
             
             {/* About and Support Links */}
             <DropdownMenu>

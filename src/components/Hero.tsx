@@ -14,22 +14,22 @@ interface SlideData {
 const slides: SlideData[] = [
   {
     id: 1,
-    title: 'Cyberpunk 2077: Phantom Liberty',
-    description: 'Dive into the new expansion with enhanced gameplay and story',
+    title: 'Cyberpunk 2077: Призрачная свобода',
+    description: 'Погрузитесь в новое дополнение с улучшенным геймплеем и сюжетом',
     imageUrl: 'https://images.unsplash.com/photo-1627327719562-f1f61e8364fb?q=80&w=2070&auto=format&fit=crop',
     link: '/games/cyberpunk-2077'
   },
   {
     id: 2,
     title: 'Starfield',
-    description: 'Explore the vastness of space in Bethesda\'s latest RPG',
+    description: 'Исследуйте просторы космоса в новой RPG от Bethesda',
     imageUrl: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2022&auto=format&fit=crop',
     link: '/games/starfield'
   },
   {
     id: 3,
     title: 'Elden Ring DLC',
-    description: 'Shadow of the Erdtree expansion coming soon',
+    description: 'Дополнение "Тень Древа Эрд" скоро в продаже',
     imageUrl: 'https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?q=80&w=1770&auto=format&fit=crop',
     link: '/games/elden-ring'
   }
@@ -89,7 +89,7 @@ const Hero = () => {
       <div className="container mx-auto px-4 md:px-6 relative z-20 h-full flex flex-col justify-end pb-16 md:pb-20">
         <div className="max-w-2xl space-y-4 animate-fade-up">
           <div className="inline-block px-3 py-1 bg-gaming-red rounded-sm text-sm font-medium tracking-wider">
-            FEATURED
+            РЕКОМЕНДУЕМ
           </div>
           <h1 className="text-3xl md:text-5xl font-bold text-white text-shadow leading-tight">
             {slides[currentSlide].title}
@@ -102,7 +102,7 @@ const Hero = () => {
               href={slides[currentSlide].link}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-gaming-red hover:bg-gaming-red-hover text-white font-medium rounded-sm transition-all duration-200 ease-in-out"
             >
-              Learn More
+              Узнать больше
               <ArrowRight size={16} />
             </a>
           </div>
@@ -114,14 +114,14 @@ const Hero = () => {
         <button 
           onClick={goToPrevSlide}
           className="p-2 bg-black/30 backdrop-blur-sm hover:bg-gaming-red/80 text-white rounded-full transition-colors"
-          aria-label="Previous slide"
+          aria-label="Предыдущий слайд"
         >
           <ArrowLeft size={24} />
         </button>
         <button 
           onClick={goToNextSlide}
           className="p-2 bg-black/30 backdrop-blur-sm hover:bg-gaming-red/80 text-white rounded-full transition-colors"
-          aria-label="Next slide"
+          aria-label="Следующий слайд"
         >
           <ArrowRight size={24} />
         </button>
@@ -139,7 +139,7 @@ const Hero = () => {
                 ? "w-8 bg-gaming-red"
                 : "bg-white/50 hover:bg-white/80"
             )}
-            aria-label={`Go to slide ${index + 1}`}
+            aria-label={`Перейти к слайду ${index + 1}`}
           ></button>
         ))}
       </div>

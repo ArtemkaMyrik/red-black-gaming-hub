@@ -167,13 +167,6 @@ const GameCard = ({
               </span>
             ))}
           </div>
-          
-          <span 
-            className="inline-flex items-center gap-1 text-sm text-white hover:text-gaming-red transition-colors"
-          >
-            Подробнее
-            <ArrowUpRight size={14} />
-          </span>
         </div>
       </Link>
       
