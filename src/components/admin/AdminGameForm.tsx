@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -85,7 +85,15 @@ interface GameImage {
   isCover: boolean;
 }
 
-const AdminGameForm = () => {
+interface AdminGameFormProps {
+  gameId?: number;
+  gameData?: any;
+  onSave?: (gameData: any) => void;
+}
+
+const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
+  const isEditMode = !!gameId;
+  
   const [images, setImages] = useState<GameImage[]>([
     { id: 1, url: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070", isCover: true },
     { id: 2, url: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070", isCover: false },
@@ -105,6 +113,29 @@ const AdminGameForm = () => {
     },
   });
 
+  // Заполняем форму данными игры при редактировании
+  useEffect(() => {
+    if (isEditMode && gameData) {
+      // В реальном приложении здесь был бы API-запрос для получения полных данных игры
+      // Сейчас используем моковые данные для демонстрации
+      const mockGameFullData = {
+        title: gameData.title || "",
+        description: "Подробное описание игры, которое загружается при редактировании.",
+        releaseDate: gameData.releaseDate || "",
+        developer: "CD Projekt RED",
+        publisher: gameData.publisher || "",
+        genre: "rpg",
+        price: "1999",
+        platforms: ["pc", "ps5", "xbox-series"],
+      };
+      
+      // Устанавливаем значения формы
+      Object.entries(mockGameFullData).forEach(([key, value]) => {
+        form.setValue(key as any, value);
+      });
+    }
+  }, [isEditMode, gameData, form]);
+
   const onSubmit = (values: GameFormValues) => {
     if (images.length === 0) {
       toast.error("Необходимо добавить хотя бы одно изображение");
@@ -116,9 +147,20 @@ const AdminGameForm = () => {
       return;
     }
 
-    // В реальном приложении здесь был бы API-запрос для сохранения игры
-    console.log("Отправка данных игры:", { ...values, images });
-    toast.success("Игра успешно сохранена");
+    // Подготавливаем данные для сохранения
+    const gameFormData = {
+      ...values,
+      images: images,
+    };
+
+    if (isEditMode && onSave) {
+      // Режим редактирования
+      onSave(gameFormData);
+    } else {
+      // Режим создания новой игры
+      console.log("Отправка данных игры:", gameFormData);
+      toast.success("Игра успешно сохранена");
+    }
   };
 
   const addImageField = () => {
@@ -150,9 +192,16 @@ const AdminGameForm = () => {
     })));
   };
 
+  const handleCancel = () => {
+    if (isEditMode && onSave) {
+      // Вернемся к списку игр
+      onSave(null);
+    }
+  };
+
   return (
     <div className="bg-gaming-card-bg border border-white/10 rounded-lg p-6">
-      <h2 className="text-xl font-bold mb-6">Добавление новой игры</h2>
+      <h2 className="text-xl font-bold mb-6">{isEditMode ? "Редактирование игры" : "Добавление новой игры"}</h2>
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -241,6 +290,7 @@ const AdminGameForm = () => {
                   <Select 
                     onValueChange={field.onChange} 
                     defaultValue={field.value}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger className="bg-gaming-dark border-white/10">
@@ -433,6 +483,7 @@ const AdminGameForm = () => {
             <Button 
               type="button" 
               variant="outline" 
+              onClick={handleCancel}
               className="border-white/10"
             >
               <X size={16} className="mr-2" />
@@ -444,7 +495,7 @@ const AdminGameForm = () => {
               className="bg-gaming-red hover:bg-gaming-red/90"
             >
               <Save size={16} className="mr-2" />
-              Сохранить
+              {isEditMode ? "Обновить" : "Сохранить"}
             </Button>
           </div>
         </form>

@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { 
   User, Lock, Eye, BellRing, PencilLine, 
-  ShieldAlert, Save, Trash2, AlertTriangle 
+  ShieldAlert, Save, Trash2, AlertTriangle, X
 } from 'lucide-react';
 
 interface ProfileSettingsProps {
@@ -40,6 +40,9 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
     profileVisibility: 'public',
     messagePermission: 'friends'
   });
+  
+  const [avatar, setAvatar] = useState<string | undefined>(profile.avatar);
+  const [coverImage, setCoverImage] = useState<string | undefined>(profile.coverImage);
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -89,6 +92,29 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
   
   const handleDeleteAccount = () => {
     toast.error('Функция удаления аккаунта временно недоступна');
+  };
+
+  const handleChangeAvatar = () => {
+    // В реальном приложении здесь была бы загрузка аватара
+    const randomAvatarId = Math.floor(Math.random() * 100);
+    setAvatar(`https://i.pravatar.cc/300?img=${randomAvatarId}`);
+    toast.success('Аватар успешно изменен');
+  };
+  
+  const handleDeleteAvatar = () => {
+    setAvatar(undefined);
+    toast.success('Аватар успешно удален');
+  };
+  
+  const handleChangeCover = () => {
+    // В реальном приложении здесь была бы загрузка фона
+    setCoverImage('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2071');
+    toast.success('Фон профиля успешно изменен');
+  };
+  
+  const handleDeleteCover = () => {
+    setCoverImage(undefined);
+    toast.success('Фон профиля успешно удален');
   };
   
   return (
@@ -165,18 +191,26 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
                 <Label className="block mb-2">Аватар</Label>
                 <div className="flex items-center gap-4">
                   <div className="h-20 w-20 rounded overflow-hidden bg-gaming-dark-accent">
-                    {profile.avatar ? (
-                      <img src={profile.avatar} alt="Аватар" className="h-full w-full object-cover" />
+                    {avatar ? (
+                      <img src={avatar} alt="Аватар" className="h-full w-full object-cover" />
                     ) : (
                       <div className="h-full w-full flex items-center justify-center text-gaming-text-secondary">
                         <User size={32} />
                       </div>
                     )}
                   </div>
-                  <Button variant="outline" className="border-white/10">
-                    <PencilLine size={16} className="mr-2" />
-                    Изменить аватар
-                  </Button>
+                  <div className="flex flex-col md:flex-row gap-2">
+                    <Button variant="outline" onClick={handleChangeAvatar} className="border-white/10">
+                      <PencilLine size={16} className="mr-2" />
+                      Изменить аватар
+                    </Button>
+                    {avatar && (
+                      <Button variant="outline" onClick={handleDeleteAvatar} className="border-gaming-red/50 text-gaming-red hover:bg-gaming-red/10">
+                        <X size={16} className="mr-2" />
+                        Удалить аватар
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
               
@@ -184,18 +218,26 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
                 <Label className="block mb-2">Фон профиля</Label>
                 <div className="flex items-center gap-4">
                   <div className="h-20 w-32 rounded overflow-hidden bg-gaming-dark-accent">
-                    {profile.coverImage ? (
-                      <img src={profile.coverImage} alt="Фон профиля" className="h-full w-full object-cover" />
+                    {coverImage ? (
+                      <img src={coverImage} alt="Фон профиля" className="h-full w-full object-cover" />
                     ) : (
                       <div className="h-full w-full flex items-center justify-center text-gaming-text-secondary bg-gradient-to-r from-gaming-dark to-gaming-card-bg">
                         <PencilLine size={24} />
                       </div>
                     )}
                   </div>
-                  <Button variant="outline" className="border-white/10">
-                    <PencilLine size={16} className="mr-2" />
-                    Изменить фон
-                  </Button>
+                  <div className="flex flex-col md:flex-row gap-2">
+                    <Button variant="outline" onClick={handleChangeCover} className="border-white/10">
+                      <PencilLine size={16} className="mr-2" />
+                      Изменить фон
+                    </Button>
+                    {coverImage && (
+                      <Button variant="outline" onClick={handleDeleteCover} className="border-gaming-red/50 text-gaming-red hover:bg-gaming-red/10">
+                        <X size={16} className="mr-2" />
+                        Удалить фон
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </CardContent>
