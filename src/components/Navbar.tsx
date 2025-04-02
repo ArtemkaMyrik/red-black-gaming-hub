@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -13,6 +13,7 @@ import {
 import { Menu, X, HelpCircle } from 'lucide-react';
 import GlobalSearch from './GlobalSearch';
 import Messages from './Messages';
+import { isUserLoggedIn, getCurrentUser, logoutUser, createTestUser } from '../utils/userUtils';
 
 const MobileNavLink = ({ to, children, onClick }: { to: string, children: React.ReactNode, onClick: () => void }) => (
   <Button asChild variant="ghost" className="w-full justify-start" onClick={onClick}>
@@ -23,11 +24,24 @@ const MobileNavLink = ({ to, children, onClick }: { to: string, children: React.
 const Navbar = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Временное состояние для демонстрации
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(getCurrentUser());
+  
+  // При монтировании компонента проверяем статус авторизации
+  useEffect(() => {
+    // Создаем тестового пользователя при первом рендере
+    if (!isUserLoggedIn()) {
+      createTestUser();
+    }
+    
+    setIsLoggedIn(isUserLoggedIn());
+    setCurrentUser(getCurrentUser());
+  }, []);
   
   const handleLogout = () => {
-    // В реальном проекте здесь будет логика выхода из аккаунта
+    logoutUser();
     setIsLoggedIn(false);
+    setCurrentUser(null);
     navigate('/');
   };
 
@@ -86,8 +100,10 @@ const Navbar = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src="https://i.pravatar.cc/300" alt="User" />
-                      <AvatarFallback className="bg-gaming-dark-accent">U</AvatarFallback>
+                      <AvatarImage src={currentUser?.avatar || "https://i.pravatar.cc/300"} alt={currentUser?.username || "Пользователь"} />
+                      <AvatarFallback className="bg-gaming-dark-accent">
+                        {currentUser?.username?.charAt(0) || "П"}
+                      </AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
