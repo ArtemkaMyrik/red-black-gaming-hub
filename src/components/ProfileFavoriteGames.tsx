@@ -80,7 +80,7 @@ const ProfileFavoriteGames = ({ userId }: ProfileFavoriteGamesProps) => {
               <Button
                 variant="destructive"
                 size="icon"
-                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-gaming-dark-accent/80 hover:bg-gaming-red text-gaming-text-secondary hover:text-white"
+                className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity bg-gaming-dark-accent/80 hover:bg-gaming-red text-gaming-text-secondary hover:text-white"
                 onClick={() => removeFromFavorites(game.id)}
               >
                 <Trash2 size={16} />

@@ -1,6 +1,5 @@
-
 import { Link } from 'react-router-dom';
-import { Calendar, MessageSquare, ArrowUpRight, Star } from 'lucide-react';
+import { Calendar, MessageSquare, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface BlogCardProps {
@@ -37,7 +36,7 @@ const BlogCard = ({
         className
       )}
     >
-      <div className="relative aspect-video overflow-hidden">
+      <Link to={`/blog/${id}`} className="relative aspect-video overflow-hidden block">
         <img 
           src={imageUrl} 
           alt={title}
@@ -48,14 +47,13 @@ const BlogCard = ({
           {category}
         </div>
         
-        {/* Рейтинг статьи */}
         {rating && (
           <div className="absolute top-4 right-4 bg-black/60 text-white text-xs flex items-center gap-1 px-2 py-1 rounded">
             <Star size={12} className="fill-gaming-red text-gaming-red" />
             <span>{rating.toFixed(1)}</span>
           </div>
         )}
-      </div>
+      </Link>
       
       <div className="p-4">
         <Link to={`/blog/${id}`}>
@@ -95,16 +93,6 @@ const BlogCard = ({
             <MessageSquare size={12} className="mr-1" />
             {commentsCount}
           </div>
-        </div>
-        
-        <div className="mt-4 pt-4 border-t border-white/5 flex justify-end">
-          <Link 
-            to={`/blog/${id}`}
-            className="inline-flex items-center gap-1 text-sm text-gaming-text-secondary group-hover:text-gaming-red transition-colors"
-          >
-            Читать статью
-            <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
         </div>
       </div>
     </div>
