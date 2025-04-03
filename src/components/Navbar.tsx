@@ -10,10 +10,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Menu, X, HelpCircle } from 'lucide-react';
+import { Menu, X, HelpCircle, Shield } from 'lucide-react';
 import GlobalSearch from './GlobalSearch';
 import Messages from './Messages';
-import { isUserLoggedIn, getCurrentUser, logoutUser, createTestUser } from '../utils/userUtils';
+import { isUserLoggedIn, getCurrentUser, logoutUser, createTestUser, hasAdminAccess } from '../utils/userUtils';
 
 const MobileNavLink = ({ to, children, onClick }: { to: string, children: React.ReactNode, onClick: () => void }) => (
   <Button asChild variant="ghost" className="w-full justify-start" onClick={onClick}>
@@ -26,6 +26,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(getCurrentUser());
+  const [hasAdmin, setHasAdmin] = useState(false);
   
   // При монтировании компонента проверяем статус авторизации
   useEffect(() => {
@@ -36,6 +37,7 @@ const Navbar = () => {
     
     setIsLoggedIn(isUserLoggedIn());
     setCurrentUser(getCurrentUser());
+    setHasAdmin(hasAdminAccess());
   }, []);
   
   const handleLogout = () => {
@@ -114,6 +116,17 @@ const Navbar = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/profile/123?tab=settings" className="cursor-pointer">Настройки</Link>
                   </DropdownMenuItem>
+                  {hasAdmin && (
+                    <>
+                      <DropdownMenuSeparator className="bg-white/10" />
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="cursor-pointer flex items-center">
+                          <Shield className="mr-2 h-4 w-4" />
+                          Панель администратора
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator className="bg-white/10" />
                   <DropdownMenuItem className="cursor-pointer text-gaming-red" onClick={handleLogout}>
                     Выйти
@@ -161,6 +174,14 @@ const Navbar = () => {
               <MobileNavLink to="/profile/123" onClick={() => setShowMobileMenu(false)}>
                 Мой профиль
               </MobileNavLink>
+              {hasAdmin && (
+                <MobileNavLink to="/admin" onClick={() => setShowMobileMenu(false)}>
+                  <div className="flex items-center">
+                    <Shield className="mr-2 h-4 w-4" />
+                    Панель администратора
+                  </div>
+                </MobileNavLink>
+              )}
               <Button 
                 variant="ghost" 
                 className="w-full justify-start text-gaming-red" 

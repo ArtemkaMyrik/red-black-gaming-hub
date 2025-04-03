@@ -6,6 +6,7 @@ export interface User {
   email: string;
   avatar?: string;
   isAdmin: boolean;
+  isModerator?: boolean;
 }
 
 // Ключ для хранения в localStorage
@@ -39,6 +40,12 @@ export const logoutUser = (): void => {
   localStorage.removeItem(USER_STORAGE_KEY);
 };
 
+// Проверка прав администратора или модератора
+export const hasAdminAccess = (): boolean => {
+  const user = getCurrentUser();
+  return !!user && (user.isAdmin || user.isModerator);
+};
+
 // Создаем тестового пользователя с указанными данными
 export const createTestUser = (): void => {
   const testUser: User = {
@@ -46,7 +53,8 @@ export const createTestUser = (): void => {
     username: 'АндрейМуравьев',
     email: 'AAMyravev@yandex.ru',
     avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780&auto=format&fit=crop',
-    isAdmin: false
+    isAdmin: false,
+    isModerator: false
   };
   
   createUser(testUser);
