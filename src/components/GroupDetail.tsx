@@ -1,15 +1,13 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Users, ArrowLeft, MessageSquare, Settings, UserPlus, UserMinus } from 'lucide-react';
+import { Users, ArrowLeft, MessageSquare, Settings, UserPlus, UserMinus, ExternalLink } from 'lucide-react';
 import GroupChat from './GroupChat';
 import GroupMembers from './GroupMembers';
 
-// Типы и интерфейсы
 interface GroupData {
   id: string;
   name: string;
@@ -34,13 +32,9 @@ const GroupDetail = ({ groupId }: GroupDetailProps) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Прокрутка наверх при загрузке
     window.scrollTo(0, 0);
-    
-    // Имитация загрузки данных группы
     setLoading(true);
     setTimeout(() => {
-      // Моковые данные для группы
       if (groupId === '1') {
         setGroup({
           id: '1',
@@ -68,7 +62,6 @@ const GroupDetail = ({ groupId }: GroupDetailProps) => {
           isAdmin: false
         });
       } else {
-        // Если группа с указанным ID не найдена
         navigate('/groups');
         toast.error('Группа не найдена');
       }
@@ -76,7 +69,6 @@ const GroupDetail = ({ groupId }: GroupDetailProps) => {
     }, 1000);
   }, [groupId, navigate]);
 
-  // Функция для вступления/выхода из группы
   const handleJoinToggle = () => {
     if (group) {
       setGroup({
@@ -89,18 +81,16 @@ const GroupDetail = ({ groupId }: GroupDetailProps) => {
     }
   };
 
-  // Если данные загружаются
   if (loading) {
     return (
       <div className="flex justify-center items-center h-96">
         <div className="animate-pulse text-gaming-text-secondary">
-          Загрузка группы...
+          Загрузка ��руппы...
         </div>
       </div>
     );
   }
 
-  // Если группа не найдена
   if (!group) {
     return (
       <div className="flex flex-col items-center justify-center h-96">
@@ -110,7 +100,7 @@ const GroupDetail = ({ groupId }: GroupDetailProps) => {
         </p>
         <Button asChild>
           <Link to="/groups">
-            <ArrowLeft className="mr-2" size={16} />
+            <ArrowLeft className="mr-2" size={18} />
             Вернуться к списку групп
           </Link>
         </Button>
@@ -120,7 +110,6 @@ const GroupDetail = ({ groupId }: GroupDetailProps) => {
 
   return (
     <div>
-      {/* Кнопка "Назад" */}
       <div className="mb-6">
         <Button variant="ghost" className="text-gaming-text-secondary p-0" asChild>
           <Link to="/groups">
@@ -130,7 +119,6 @@ const GroupDetail = ({ groupId }: GroupDetailProps) => {
         </Button>
       </div>
       
-      {/* Шапка группы */}
       <div className="relative mb-6 overflow-hidden rounded-md">
         <div className="h-64 overflow-hidden">
           {group.image ? (
@@ -158,28 +146,43 @@ const GroupDetail = ({ groupId }: GroupDetailProps) => {
               </div>
             </div>
             
-            <Button 
-              onClick={handleJoinToggle}
-              className={group.isJoined ? "bg-gaming-dark-accent hover:bg-gaming-dark" : "bg-gaming-red hover:bg-gaming-red-hover"}
-            >
-              {group.isJoined ? (
-                <>
-                  <UserMinus className="mr-2" size={16} />
-                  Покинуть группу
-                </>
-              ) : (
-                <>
-                  <UserPlus className="mr-2" size={16} />
-                  Вступить в группу
-                </>
+            <div className="flex gap-2">
+              {group.isJoined && (
+                <Button 
+                  variant="outline" 
+                  size="default" 
+                  className="border-white/10 text-gaming-text-secondary hover:text-white"
+                  asChild
+                >
+                  <Link to={`/groups/${group.id}/chat`}>
+                    <ExternalLink size={16} className="mr-2" />
+                    Перейти
+                  </Link>
+                </Button>
               )}
-            </Button>
+              
+              <Button 
+                onClick={handleJoinToggle}
+                className={group.isJoined ? "bg-gaming-dark-accent hover:bg-gaming-dark" : "bg-gaming-red hover:bg-gaming-red-hover"}
+              >
+                {group.isJoined ? (
+                  <>
+                    <UserMinus className="mr-2" size={16} />
+                    Покинуть группу
+                  </>
+                ) : (
+                  <>
+                    <UserPlus className="mr-2" size={16} />
+                    Вступить в группу
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Левая колонка - Информация о группе */}
         <div className="md:col-span-1">
           <div className="bg-gaming-card-bg border border-white/10 rounded-md p-4 mb-4">
             <h2 className="text-lg font-bold mb-3">О группе</h2>
@@ -195,7 +198,6 @@ const GroupDetail = ({ groupId }: GroupDetailProps) => {
             )}
           </div>
           
-          {/* Администраторы группы */}
           <div className="bg-gaming-card-bg border border-white/10 rounded-md p-4">
             <h2 className="text-lg font-bold mb-3">Администраторы</h2>
             <div className="space-y-3">
@@ -223,7 +225,6 @@ const GroupDetail = ({ groupId }: GroupDetailProps) => {
           </div>
         </div>
         
-        {/* Правая колонка - Вкладки с контентом */}
         <div className="md:col-span-2">
           <div className="bg-gaming-card-bg border border-white/10 rounded-md overflow-hidden">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

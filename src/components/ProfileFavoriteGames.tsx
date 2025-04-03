@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Heart, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import GameCard from './GameCard';
+import { Link } from 'react-router-dom';
 
 interface FavoriteGame {
   id: number;
@@ -94,8 +95,11 @@ const ProfileFavoriteGames = ({ userId }: ProfileFavoriteGamesProps) => {
           <p className="text-gaming-text-secondary">У вас пока нет избранных игр</p>
           <Button
             className="mt-4 bg-gaming-red hover:bg-gaming-red/90"
+            asChild
           >
-            Перейти к каталогу игр
+            <Link to="/games">
+              Перейти к каталогу игр
+            </Link>
           </Button>
         </div>
       )}

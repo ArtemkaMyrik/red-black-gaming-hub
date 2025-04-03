@@ -79,6 +79,7 @@ const GameDetail = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('description');
   const [userRating, setUserRating] = useState<number | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
   
   useEffect(() => {
     // Имитация загрузки данных
@@ -106,6 +107,11 @@ const GameDetail = () => {
   const handleRating = (rating: number) => {
     setUserRating(rating);
     toast.success('Ваша оценка сохранена!');
+  };
+  
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    toast.success(isFavorite ? 'Игра удалена из избранного' : 'Игра добавлена в избранное');
   };
   
   if (loading) {
@@ -209,11 +215,14 @@ const GameDetail = () => {
               
               <div className="flex gap-2 mt-4 md:mt-0">
                 <Button 
-                  variant="outline" 
-                  className="border-gaming-red text-gaming-red hover:bg-gaming-red hover:text-white"
+                  variant={isFavorite ? "default" : "outline"}
+                  className={isFavorite 
+                    ? "bg-gaming-red hover:bg-gaming-red/90 text-white" 
+                    : "border-gaming-red text-gaming-red hover:bg-gaming-red hover:text-white"}
+                  onClick={toggleFavorite}
                 >
                   <ThumbsUp size={16} className="mr-1" />
-                  В избранное
+                  {isFavorite ? 'Убрать из избранного' : 'В избранное'}
                 </Button>
                 
                 <Button 
@@ -234,24 +243,50 @@ const GameDetail = () => {
           <div className="mb-8 bg-gaming-card-bg rounded-md p-4 border border-white/5">
             <h3 className="text-lg font-medium mb-4">Ваша оценка</h3>
             <div className="flex items-center gap-2">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  onClick={() => handleRating(star)}
-                  className="text-2xl transition-colors"
-                >
-                  <Star
-                    size={28}
-                    className={
-                      userRating && star <= userRating
-                        ? "text-gaming-red fill-gaming-red"
-                        : "text-gaming-text-secondary"
-                    }
-                  />
-                </button>
-              ))}
+              {[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((star) => {
+                const isHalf = star % 1 !== 0;
+                const fullStar = Math.floor(star);
+                const active = userRating !== null && star <= userRating;
+                return (
+                  <button
+                    key={star}
+                    onClick={() => handleRating(star)}
+                    className="text-2xl transition-colors relative"
+                  >
+                    {isHalf ? (
+                      <>
+                        <span className="absolute inset-0 w-1/2 overflow-hidden">
+                          <Star
+                            size={28}
+                            className={
+                              active
+                                ? "text-gaming-red fill-gaming-red"
+                                : "text-gaming-text-secondary"
+                            }
+                          />
+                        </span>
+                        <Star
+                          size={28}
+                          className="text-gaming-text-secondary"
+                        />
+                      </>
+                    ) : (
+                      <Star
+                        size={28}
+                        className={
+                          userRating !== null && fullStar <= userRating
+                            ? "text-gaming-red fill-gaming-red"
+                            : "text-gaming-text-secondary"
+                        }
+                      />
+                    )}
+                  </button>
+                );
+              })}
               <span className="ml-4 text-sm text-gaming-text-secondary">
-                {userRating ? `Вы поставили ${userRating} из 5` : 'Нажмите на звезду, чтобы оценить игру'}
+                {userRating 
+                  ? `Вы поставили ${userRating.toFixed(1)} из 5` 
+                  : 'Нажмите на звезду, чтобы оценить игру'}
               </span>
             </div>
           </div>
