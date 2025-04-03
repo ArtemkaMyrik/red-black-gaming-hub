@@ -80,6 +80,7 @@ const GameDetail = () => {
   const [activeTab, setActiveTab] = useState('description');
   const [userRating, setUserRating] = useState<number | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [hoveredRating, setHoveredRating] = useState<number | null>(null);
   
   useEffect(() => {
     // Имитация загрузки данных
@@ -243,50 +244,54 @@ const GameDetail = () => {
           <div className="mb-8 bg-gaming-card-bg rounded-md p-4 border border-white/5">
             <h3 className="text-lg font-medium mb-4">Ваша оценка</h3>
             <div className="flex items-center gap-2">
-              {[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((star) => {
-                const isHalf = star % 1 !== 0;
-                const fullStar = Math.floor(star);
-                const active = userRating !== null && star <= userRating;
-                return (
-                  <button
-                    key={star}
+              {[1, 2, 3, 4, 5].map((star) => (
+                <div
+                  key={star}
+                  className="w-8 h-8 relative cursor-pointer flex"
+                  onMouseLeave={() => setHoveredRating(null)}
+                >
+                  {/* Левая половина (0.5) */}
+                  <div 
+                    className="w-1/2 h-full absolute left-0 top-0 z-10"
+                    onMouseEnter={() => setHoveredRating(star - 0.5)}
+                    onClick={() => handleRating(star - 0.5)}
+                  ></div>
+                  
+                  {/* Правая половина (1.0) */}
+                  <div 
+                    className="w-1/2 h-full absolute right-0 top-0 z-10"
+                    onMouseEnter={() => setHoveredRating(star)}
                     onClick={() => handleRating(star)}
-                    className="text-2xl transition-colors relative"
-                  >
-                    {isHalf ? (
-                      <>
-                        <span className="absolute inset-0 w-1/2 overflow-hidden">
-                          <Star
-                            size={28}
-                            className={
-                              active
-                                ? "text-gaming-red fill-gaming-red"
-                                : "text-gaming-text-secondary"
-                            }
-                          />
-                        </span>
-                        <Star
-                          size={28}
-                          className="text-gaming-text-secondary"
-                        />
-                      </>
-                    ) : (
+                  ></div>
+                  
+                  {/* Основная звезда */}
+                  <Star
+                    size={32}
+                    className={
+                      (userRating !== null && star <= userRating) || (hoveredRating !== null && star <= hoveredRating)
+                        ? "text-gaming-red fill-gaming-red"
+                        : "text-gaming-text-secondary"
+                    }
+                  />
+                  
+                  {/* Половина звезды */}
+                  {((userRating !== null && star - 0.5 === userRating) || 
+                    (hoveredRating !== null && star - 0.5 === hoveredRating)) && (
+                    <div className="absolute inset-0 w-1/2 overflow-hidden">
                       <Star
-                        size={28}
-                        className={
-                          userRating !== null && fullStar <= userRating
-                            ? "text-gaming-red fill-gaming-red"
-                            : "text-gaming-text-secondary"
-                        }
+                        size={32}
+                        className="text-gaming-red fill-gaming-red"
                       />
-                    )}
-                  </button>
-                );
-              })}
+                    </div>
+                  )}
+                </div>
+              ))}
               <span className="ml-4 text-sm text-gaming-text-secondary">
-                {userRating 
-                  ? `Вы поставили ${userRating.toFixed(1)} из 5` 
-                  : 'Нажмите на звезду, чтобы оценить игру'}
+                {hoveredRating 
+                  ? `Вы выбираете оценку ${hoveredRating.toFixed(1)} из 5` 
+                  : userRating 
+                    ? `Вы поставили ${userRating.toFixed(1)} из 5` 
+                    : 'Нажмите на звезду, чтобы оценить игру'}
               </span>
             </div>
           </div>
