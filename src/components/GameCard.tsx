@@ -33,6 +33,9 @@ const GameCard = ({
 }: GameCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
+  // Преобразуем рейтинг из 10-балльной системы в 5-балльную
+  const displayRating = (rating / 2).toFixed(1);
+
   // Форматирование платформ для отображения иконок или коротких названий
   const getPlatformLabel = (platform: string) => {
     switch (platform.toLowerCase()) {
@@ -79,7 +82,7 @@ const GameCard = ({
           />
           <div className="absolute top-2 left-2 bg-gaming-red/90 text-white text-xs font-bold px-2 py-1 rounded-sm flex items-center">
             <Star size={12} className="mr-1" fill="white" />
-            {rating.toFixed(1)}
+            {displayRating}
           </div>
         </Link>
         
@@ -151,7 +154,7 @@ const GameCard = ({
         />
         <div className="absolute top-2 right-2 bg-gaming-red/90 text-white text-xs font-bold px-2 py-1 rounded-sm flex items-center">
           <Star size={12} className="mr-1" fill="white" />
-          {rating.toFixed(1)}
+          {displayRating}
         </div>
         
         <div className="absolute inset-0 bg-gradient-to-t from-gaming-dark via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

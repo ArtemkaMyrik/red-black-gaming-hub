@@ -1,5 +1,5 @@
 
-import { PencilLine, Calendar, GamepadIcon, MessageSquare } from 'lucide-react';
+import { Calendar, GamepadIcon, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
@@ -27,20 +27,11 @@ const ProfileHeader = ({ profile }: ProfileHeaderProps) => {
         className="w-full h-64 md:h-80 bg-gaming-card-bg bg-cover bg-center relative"
         style={{ 
           backgroundImage: profile.coverImage 
-            ? `linear-gradient(to bottom, rgba(18, 18, 18, 0.6), rgba(18, 18, 18, 0.8)), url(${profile.coverImage})` 
+            ? `linear-gradient to bottom, rgba(18, 18, 18, 0.6), rgba(18, 18, 18, 0.8)), url(${profile.coverImage})` 
             : undefined 
         }}
       >
-        {isCurrentUser && (
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="absolute top-4 right-4 bg-gaming-dark-accent/80 border-white/10 hover:bg-gaming-card-bg"
-          >
-            <PencilLine size={16} className="mr-2" />
-            Изменить фон
-          </Button>
-        )}
+        {/* Кнопки изменения фона удалены */}
       </div>
       
       {/* Основная информация профиля */}
@@ -59,15 +50,7 @@ const ProfileHeader = ({ profile }: ProfileHeaderProps) => {
                 )}
               </Avatar>
               
-              {isCurrentUser && (
-                <Button 
-                  variant="outline" 
-                  size="icon" 
-                  className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-gaming-dark-accent border border-white/10"
-                >
-                  <PencilLine size={14} />
-                </Button>
-              )}
+              {/* Кнопка изменения аватара удалена */}
             </div>
           </div>
           
@@ -86,7 +69,7 @@ const ProfileHeader = ({ profile }: ProfileHeaderProps) => {
                 <Button 
                   className="mt-4 md:mt-0 bg-gaming-red hover:bg-gaming-red-hover"
                 >
-                  <PencilLine size={16} className="mr-2" />
+                  <MessageSquare size={16} className="mr-2" />
                   Редактировать профиль
                 </Button>
               ) : (

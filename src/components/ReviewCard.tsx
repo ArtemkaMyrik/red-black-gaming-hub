@@ -41,11 +41,14 @@ const ReviewCard = ({
     setIsLiked(!isLiked);
   };
 
-  // Generate stars based on rating
+  // Преобразуем рейтинг из 10-балльной системы в 5-балльную
+  const displayRating = (rating / 2).toFixed(1);
+
+  // Generate stars based on rating (5-балльная система)
   const renderStars = () => {
     const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
+    const fullStars = Math.floor(rating / 2);
+    const hasHalfStar = (rating / 2) % 1 >= 0.5;
     
     for (let i = 0; i < fullStars; i++) {
       stars.push(<Star key={`full-${i}`} size={14} fill="#ea384c" stroke="none" />);
@@ -102,7 +105,7 @@ const ReviewCard = ({
         
         <div className="flex items-center">
           <div className="flex">{renderStars()}</div>
-          <span className="ml-2 text-sm font-bold">{rating.toFixed(1)}</span>
+          <span className="ml-2 text-sm font-bold">{displayRating}</span>
         </div>
       </div>
       
@@ -130,7 +133,7 @@ const ReviewCard = ({
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="mt-2 text-xs text-gaming-red hover:text-gaming-red-hover transition-colors"
               >
-                {isExpanded ? 'Show Less' : 'Read More'}
+                {isExpanded ? 'Свернуть' : 'Читать далее'}
               </button>
             )}
           </div>

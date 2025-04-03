@@ -8,7 +8,7 @@ const topGames = [
     id: 1,
     title: 'The Witcher 3: Wild Hunt',
     imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1770&auto=format&fit=crop',
-    rating: 9.8,
+    rating: 4.9, // Изменено на 5-балльную систему
     releaseYear: 2015,
     genre: 'RPG',
     platforms: ['PC', 'PlayStation', 'Xbox', 'Switch']
@@ -17,7 +17,7 @@ const topGames = [
     id: 2,
     title: 'Red Dead Redemption 2',
     imageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1770&auto=format&fit=crop',
-    rating: 9.7,
+    rating: 4.9, // Изменено на 5-балльную систему
     releaseYear: 2018,
     genre: 'Action-Adventure',
     platforms: ['PC', 'PlayStation', 'Xbox']
@@ -26,7 +26,7 @@ const topGames = [
     id: 3,
     title: 'God of War',
     imageUrl: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=1770&auto=format&fit=crop',
-    rating: 9.6,
+    rating: 4.8, // Изменено на 5-балльную систему
     releaseYear: 2018,
     genre: 'Action-Adventure',
     platforms: ['PlayStation', 'PC']
@@ -35,7 +35,7 @@ const topGames = [
     id: 4,
     title: 'The Legend of Zelda: Breath of the Wild',
     imageUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1647&auto=format&fit=crop',
-    rating: 9.5,
+    rating: 4.8, // Изменено на 5-балльную систему
     releaseYear: 2017,
     genre: 'Action-Adventure',
     platforms: ['Switch']
@@ -44,7 +44,7 @@ const topGames = [
     id: 5,
     title: 'Ghost of Tsushima',
     imageUrl: 'https://images.unsplash.com/photo-1605479695026-6f7602307d94?q=80&w=1974&auto=format&fit=crop',
-    rating: 9.3,
+    rating: 4.7, // Изменено на 5-балльную систему
     releaseYear: 2020,
     genre: 'Action-Adventure',
     platforms: ['PlayStation', 'PC']
