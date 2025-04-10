@@ -4,7 +4,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import ProfileHeader from '../components/ProfileHeader';
+import ProfileHeader from './ProfileHeader';
 import ProfileActivity from '../components/ProfileActivity';
 import ProfileFriends from '../components/ProfileFriends';
 import ProfileSettings from '../components/ProfileSettings';

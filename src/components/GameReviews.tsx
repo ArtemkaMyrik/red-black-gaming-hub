@@ -19,12 +19,14 @@ interface Review {
 interface GameReviewsProps {
   gameId: number;
   initialReviews: Review[];
+  userRating?: number | null;
+  onRatingChange?: (rating: number) => void;
 }
 
-const GameReviews = ({ gameId, initialReviews }: GameReviewsProps) => {
+const GameReviews = ({ gameId, initialReviews, userRating = 0, onRatingChange }: GameReviewsProps) => {
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
   const [newReview, setNewReview] = useState('');
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(userRating || 0);
   const [hoveredRating, setHoveredRating] = useState(0);
   
   const handleSubmitReview = () => {
@@ -54,11 +56,23 @@ const GameReviews = ({ gameId, initialReviews }: GameReviewsProps) => {
     // Добавляем отзыв в список
     setReviews([newReviewObj, ...reviews]);
     
+    // Вызываем callback для обновления родительского компонента, если он предоставлен
+    if (onRatingChange) {
+      onRatingChange(rating);
+    }
+    
     // Сбрасываем форму
     setNewReview('');
-    setRating(0);
     
     toast.success('Ваш отзыв добавлен!');
+  };
+
+  // Обновляем рейтинг и вызываем callback
+  const handleRatingChange = (newRating: number) => {
+    setRating(newRating);
+    if (onRatingChange) {
+      onRatingChange(newRating);
+    }
   };
   
   return (
@@ -74,23 +88,54 @@ const GameReviews = ({ gameId, initialReviews }: GameReviewsProps) => {
             <span className="text-sm text-gaming-text-secondary mr-2">Ваша оценка:</span>
             <div className="flex">
               {[1, 2, 3, 4, 5].map((star) => (
-                <button
+                <div
                   key={star}
-                  onClick={() => setRating(star)}
-                  onMouseEnter={() => setHoveredRating(star)}
+                  className="w-6 h-6 relative cursor-pointer flex"
                   onMouseLeave={() => setHoveredRating(0)}
-                  className="transition-colors"
                 >
+                  {/* Левая половина (0.5) */}
+                  <div 
+                    className="w-1/2 h-full absolute left-0 top-0 z-10"
+                    onMouseEnter={() => setHoveredRating(star - 0.5)}
+                    onClick={() => handleRatingChange(star - 0.5)}
+                  ></div>
+                  
+                  {/* Правая половина (1.0) */}
+                  <div 
+                    className="w-1/2 h-full absolute right-0 top-0 z-10"
+                    onMouseEnter={() => setHoveredRating(star)}
+                    onClick={() => handleRatingChange(star)}
+                  ></div>
+                  
+                  {/* Основная звезда */}
                   <Star
-                    size={20}
+                    size={24}
                     className={
-                      star <= (hoveredRating || rating)
+                      (rating !== 0 && star <= rating) || (hoveredRating !== 0 && star <= hoveredRating)
                         ? "text-gaming-red fill-gaming-red"
                         : "text-gaming-text-secondary"
                     }
                   />
-                </button>
+                  
+                  {/* Половина звезды */}
+                  {((rating !== 0 && star - 0.5 === rating) || 
+                    (hoveredRating !== 0 && star - 0.5 === hoveredRating)) && (
+                    <div className="absolute inset-0 w-1/2 overflow-hidden">
+                      <Star
+                        size={24}
+                        className="text-gaming-red fill-gaming-red"
+                      />
+                    </div>
+                  )}
+                </div>
               ))}
+              <span className="ml-4 text-sm text-gaming-text-secondary">
+                {hoveredRating 
+                  ? `${hoveredRating.toFixed(1)} из 5` 
+                  : rating 
+                    ? `${rating.toFixed(1)} из 5` 
+                    : 'Нажмите на звезду, чтобы оценить игру'}
+              </span>
             </div>
           </div>
           
