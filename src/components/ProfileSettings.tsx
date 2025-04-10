@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -141,7 +140,6 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
           </TabsTrigger>
         </TabsList>
         
-        {/* Настройки профиля */}
         <TabsContent value="profile" className="mt-0">
           <Card className="bg-gaming-card-bg border-white/10">
             <CardHeader>
@@ -169,8 +167,8 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
                     name="email"
                     type="email"
                     value={formData.email}
-                    onChange={handleInputChange}
-                    className="bg-gaming-dark border-white/10"
+                    readOnly
+                    className="bg-gaming-dark border-white/10 opacity-70"
                   />
                 </div>
               </div>
@@ -253,7 +251,6 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
           </Card>
         </TabsContent>
         
-        {/* Настройки безопасности */}
         <TabsContent value="security" className="mt-0">
           <Card className="bg-gaming-card-bg border-white/10">
             <CardHeader>
@@ -333,7 +330,6 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
           </Card>
         </TabsContent>
         
-        {/* Настройки уведомлений */}
         <TabsContent value="notifications" className="mt-0">
           <Card className="bg-gaming-card-bg border-white/10">
             <CardHeader>
@@ -412,7 +408,6 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
           </Card>
         </TabsContent>
         
-        {/* Настройки приватности */}
         <TabsContent value="privacy" className="mt-0">
           <Card className="bg-gaming-card-bg border-white/10">
             <CardHeader>

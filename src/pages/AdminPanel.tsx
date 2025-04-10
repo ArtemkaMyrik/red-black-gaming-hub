@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Navbar from '../components/Navbar';
@@ -9,8 +8,8 @@ import AdminBlogs from '../components/admin/AdminBlogs';
 import AdminUsers from '../components/admin/AdminUsers';
 import AdminLogin from '../components/admin/AdminLogin';
 import AdminGameForm from '../components/admin/AdminGameForm';
-import AdminCategories from '../components/admin/AdminCategories'; // Добавляем импорт
-import { Shield, Plus } from 'lucide-react';
+import AdminCategories from '../components/admin/AdminCategories';
+import { Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const AdminPanel = () => {
@@ -81,13 +80,11 @@ const AdminPanel = () => {
                 </>
               ) : (
                 <>
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold">Управление играми</h2>
+                  <div className="flex justify-end items-center mb-4">
                     <Button 
                       onClick={() => setIsAddingGame(true)}
                       className="bg-gaming-red hover:bg-gaming-red/90"
                     >
-                      <Plus size={16} className="mr-2" />
                       Добавить игру
                     </Button>
                   </div>

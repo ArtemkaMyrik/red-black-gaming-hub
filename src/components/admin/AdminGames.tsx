@@ -1,10 +1,9 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Search, Edit, Trash, PlusCircle, CheckCircle, XCircle } from 'lucide-react';
+import { Search, Edit, Trash, PlusCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import AdminGameForm from './AdminGameForm';
 
@@ -36,20 +35,6 @@ const AdminGames = () => {
     game.publisher.toLowerCase().includes(searchQuery.toLowerCase())
   );
   
-  const approveGame = (id: number) => {
-    setGames(games.map(game => 
-      game.id === id ? { ...game, status: 'approved' as const } : game
-    ));
-    toast.success('Игра одобрена');
-  };
-  
-  const rejectGame = (id: number) => {
-    setGames(games.map(game => 
-      game.id === id ? { ...game, status: 'rejected' as const } : game
-    ));
-    toast.success('Игра отклонена');
-  };
-  
   const deleteGame = (id: number) => {
     if (window.confirm('Вы уверены, что хотите удалить эту игру?')) {
       setGames(games.filter(game => game.id !== id));
@@ -57,13 +42,6 @@ const AdminGames = () => {
     }
   };
   
-  const addGame = (newGame: Omit<Game, 'id' | 'status'>) => {
-    const newId = games.length > 0 ? Math.max(...games.map(g => g.id)) + 1 : 1;
-    setGames([...games, { ...newGame, id: newId, status: 'pending' }]);
-    setIsAddGameDialogOpen(false);
-    toast.success('Игра добавлена и ожидает проверки');
-  };
-
   const startEditingGame = (id: number) => {
     setEditingGameId(id);
   };
@@ -98,34 +76,15 @@ const AdminGames = () => {
         </>
       ) : (
         <>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <h2 className="text-xl font-bold">Управление играми</h2>
-            
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="relative">
-                <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-gaming-text-secondary" size={18} />
-                <Input
-                  placeholder="Поиск игр..."
-                  className="pl-8 bg-gaming-dark border-white/10"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-              
-              <Dialog open={isAddGameDialogOpen} onOpenChange={setIsAddGameDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-gaming-red hover:bg-gaming-red/90">
-                    <PlusCircle size={16} className="mr-2" />
-                    Добавить игру
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-gaming-card-bg border-white/10">
-                  <DialogHeader>
-                    <DialogTitle>Добавить новую игру</DialogTitle>
-                  </DialogHeader>
-                  <AddGameForm onSubmit={addGame} onCancel={() => setIsAddGameDialogOpen(false)} />
-                </DialogContent>
-              </Dialog>
+          <div className="mb-6">
+            <div className="relative">
+              <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-gaming-text-secondary" size={18} />
+              <Input
+                placeholder="Поиск игр..."
+                className="pl-8 bg-gaming-dark border-white/10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
           </div>
           
@@ -136,7 +95,6 @@ const AdminGames = () => {
                   <TableHead className="w-[300px]">Название</TableHead>
                   <TableHead className="hidden md:table-cell">Издатель</TableHead>
                   <TableHead className="hidden md:table-cell">Дата выхода</TableHead>
-                  <TableHead>Статус</TableHead>
                   <TableHead className="text-right">Действия</TableHead>
                 </TableRow>
               </TableHeader>
@@ -147,43 +105,8 @@ const AdminGames = () => {
                       <TableCell className="font-medium">{game.title}</TableCell>
                       <TableCell className="hidden md:table-cell">{game.publisher}</TableCell>
                       <TableCell className="hidden md:table-cell">{game.releaseDate}</TableCell>
-                      <TableCell>
-                        <span className={`inline-flex px-2 py-1 rounded-full text-xs ${
-                          game.status === 'approved' 
-                            ? 'bg-green-900/30 text-green-400' 
-                            : game.status === 'rejected'
-                            ? 'bg-red-900/30 text-red-400'
-                            : 'bg-yellow-900/30 text-yellow-400'
-                        }`}>
-                          {game.status === 'approved' 
-                            ? 'Одобрено' 
-                            : game.status === 'rejected'
-                            ? 'Отклонено'
-                            : 'На проверке'}
-                        </span>
-                      </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
-                          {game.status === 'pending' && (
-                            <>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => approveGame(game.id)}
-                                className="h-8 w-8 p-0 text-green-500"
-                              >
-                                <CheckCircle size={16} />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => rejectGame(game.id)}
-                                className="h-8 w-8 p-0 text-red-500"
-                              >
-                                <XCircle size={16} />
-                              </Button>
-                            </>
-                          )}
                           <Button
                             size="sm"
                             variant="ghost"
@@ -206,7 +129,7 @@ const AdminGames = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">
+                    <TableCell colSpan={4} className="h-24 text-center">
                       Ничего не найдено.
                     </TableCell>
                   </TableRow>
