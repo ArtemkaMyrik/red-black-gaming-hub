@@ -10,7 +10,6 @@ import GameDetail from "./pages/GameDetail";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import UserProfile from "./pages/UserProfile";
-import Groups from "./pages/Groups";
 import About from "./pages/About";
 import Terms from "./pages/Terms";
 import Support from "./pages/Support";
@@ -35,8 +34,6 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/profile/:id" element={<UserProfile />} />
-          <Route path="/groups" element={<Groups />} />
-          <Route path="/groups/:id" element={<Groups />} />
           <Route path="/about" element={<About />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/support" element={<Support />} />

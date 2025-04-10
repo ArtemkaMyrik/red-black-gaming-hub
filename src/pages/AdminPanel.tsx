@@ -9,6 +9,7 @@ import AdminBlogs from '../components/admin/AdminBlogs';
 import AdminUsers from '../components/admin/AdminUsers';
 import AdminLogin from '../components/admin/AdminLogin';
 import AdminGameForm from '../components/admin/AdminGameForm';
+import AdminCategories from '../components/admin/AdminCategories'; // Добавляем импорт
 import { Shield, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -45,9 +46,12 @@ const AdminPanel = () => {
             setActiveTab(value);
             setIsAddingGame(false);
           }} className="w-full">
-            <TabsList className="bg-gaming-dark-accent mb-6 w-full grid grid-cols-2 md:grid-cols-4">
+            <TabsList className="bg-gaming-dark-accent mb-6 w-full grid grid-cols-2 md:grid-cols-5">
               <TabsTrigger value="games" className="data-[state=active]:bg-gaming-red">
                 Игры
+              </TabsTrigger>
+              <TabsTrigger value="categories" className="data-[state=active]:bg-gaming-red">
+                Категории
               </TabsTrigger>
               <TabsTrigger value="reviews" className="data-[state=active]:bg-gaming-red">
                 Отзывы
@@ -90,6 +94,10 @@ const AdminPanel = () => {
                   <AdminGames />
                 </>
               )}
+            </TabsContent>
+            
+            <TabsContent value="categories">
+              <AdminCategories />
             </TabsContent>
             
             <TabsContent value="reviews">
