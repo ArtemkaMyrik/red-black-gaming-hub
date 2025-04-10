@@ -7,7 +7,6 @@ import Footer from '../components/Footer';
 import ProfileHeader from '../components/ProfileHeader';
 import ProfileActivity from '../components/ProfileActivity';
 import ProfileFriends from '../components/ProfileFriends';
-import ProfileGroups from '../components/ProfileGroups';
 import ProfileSettings from '../components/ProfileSettings';
 import ProfileFavoriteGames from '../components/ProfileFavoriteGames';
 import ProfileBlogs from '../components/ProfileBlogs';
@@ -140,12 +139,6 @@ const UserProfile = () => {
                   Друзья
                 </TabsTrigger>
                 <TabsTrigger 
-                  value="groups" 
-                  className="px-6 py-3 border-b-2 border-transparent data-[state=active]:border-gaming-red rounded-none bg-transparent"
-                >
-                  Группы
-                </TabsTrigger>
-                <TabsTrigger 
                   value="settings" 
                   className="px-6 py-3 border-b-2 border-transparent data-[state=active]:border-gaming-red rounded-none bg-transparent"
                 >
@@ -168,10 +161,6 @@ const UserProfile = () => {
             
             <TabsContent value="friends" className="mt-0">
               <ProfileFriends userId={profile.id} />
-            </TabsContent>
-            
-            <TabsContent value="groups" className="mt-0">
-              <ProfileGroups userId={profile.id} />
             </TabsContent>
             
             <TabsContent value="settings" className="mt-0">
