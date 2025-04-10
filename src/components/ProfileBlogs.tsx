@@ -114,48 +114,50 @@ const ProfileBlogs = ({ userId }: ProfileBlogsProps) => {
       {userBlogs.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {userBlogs.map(blog => (
-            <div key={blog.id} className="relative group">
-              <BlogCard {...blog} />
-              <div className="absolute bottom-[40%] right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="bg-gaming-dark-accent/80 hover:bg-gaming-dark-accent border-white/10"
-                  onClick={() => handleEditBlog(blog.id)}
-                >
-                  <Edit size={16} />
-                </Button>
-                
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      className="bg-gaming-dark-accent/80 hover:bg-gaming-red text-gaming-text-secondary hover:text-white"
-                    >
-                      <Trash2 size={16} />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent className="bg-gaming-card-bg border-white/10">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle className="text-gaming-text-primary">Удалить блог</AlertDialogTitle>
-                      <AlertDialogDescription className="text-gaming-text-secondary">
-                        Вы уверены, что хотите удалить блог "{blog.title}"? Это действие нельзя будет отменить.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel className="bg-gaming-dark-accent border-white/10 text-gaming-text-primary hover:bg-gaming-dark-accent/80 hover:text-gaming-text-primary">
-                        Отмена
-                      </AlertDialogCancel>
-                      <AlertDialogAction 
-                        className="bg-gaming-red hover:bg-gaming-red/90"
-                        onClick={() => deleteBlog(blog.id)}
+            <div key={blog.id} className="relative group h-full">
+              <div className="h-full flex flex-col">
+                <BlogCard {...blog} className="h-full" />
+                <div className="absolute bottom-[40%] right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="bg-gaming-dark-accent/80 hover:bg-gaming-dark-accent border-white/10"
+                    onClick={() => handleEditBlog(blog.id)}
+                  >
+                    <Edit size={16} />
+                  </Button>
+                  
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        className="bg-gaming-dark-accent/80 hover:bg-gaming-red text-gaming-text-secondary hover:text-white"
                       >
-                        Удалить
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                        <Trash2 size={16} />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="bg-gaming-card-bg border-white/10">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-gaming-text-primary">Удалить блог</AlertDialogTitle>
+                        <AlertDialogDescription className="text-gaming-text-secondary">
+                          Вы уверены, что хотите удалить блог "{blog.title}"? Это действие нельзя будет отменить.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="bg-gaming-dark-accent border-white/10 text-gaming-text-primary hover:bg-gaming-dark-accent/80 hover:text-gaming-text-primary">
+                          Отмена
+                        </AlertDialogCancel>
+                        <AlertDialogAction 
+                          className="bg-gaming-red hover:bg-gaming-red/90"
+                          onClick={() => deleteBlog(blog.id)}
+                        >
+                          Удалить
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
               </div>
             </div>
           ))}

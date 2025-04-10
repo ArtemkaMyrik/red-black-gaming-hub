@@ -69,9 +69,6 @@ const Navbar = () => {
             <Button asChild variant="ghost">
               <Link to="/blog">Блог</Link>
             </Button>
-            <Button asChild variant="ghost">
-              <Link to="/groups">Группы</Link>
-            </Button>
             
             {/* Messages */}
             <Messages />
@@ -84,9 +81,6 @@ const Navbar = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-gaming-card-bg border-white/10">
-                <DropdownMenuItem asChild>
-                  <Link to="/about" className="cursor-pointer">О нас</Link>
-                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/terms" className="cursor-pointer">Правила</Link>
                 </DropdownMenuItem>
@@ -165,9 +159,6 @@ const Navbar = () => {
           <MobileNavLink to="/blog" onClick={() => setShowMobileMenu(false)}>
             Блог
           </MobileNavLink>
-          <MobileNavLink to="/groups" onClick={() => setShowMobileMenu(false)}>
-            Группы
-          </MobileNavLink>
           
           {isLoggedIn ? (
             <>
@@ -204,9 +195,6 @@ const Navbar = () => {
             </>
           )}
           
-          <MobileNavLink to="/about" onClick={() => setShowMobileMenu(false)}>
-            О нас
-          </MobileNavLink>
           <MobileNavLink to="/terms" onClick={() => setShowMobileMenu(false)}>
             Правила пользования
           </MobileNavLink>

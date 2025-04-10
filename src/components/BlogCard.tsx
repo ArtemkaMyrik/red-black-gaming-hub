@@ -31,7 +31,7 @@ const BlogCard = ({
   return (
     <div 
       className={cn(
-        "group bg-gaming-card-bg rounded-md overflow-hidden border border-white/5 transition-all duration-300 hover:shadow-lg",
+        "group bg-gaming-card-bg rounded-md overflow-hidden border border-white/5 transition-all duration-300 hover:shadow-lg flex flex-col h-full",
         className
       )}
     >
@@ -47,14 +47,14 @@ const BlogCard = ({
         </div>
       </Link>
       
-      <div className="p-4">
+      <div className="p-4 flex flex-col flex-grow">
         <Link to={`/blog/${id}`}>
           <h3 className="text-xl font-bold line-clamp-2 group-hover:text-gaming-red transition-colors">
             {title}
           </h3>
         </Link>
         
-        <p className="mt-2 text-sm text-gaming-text-secondary line-clamp-2">
+        <p className="mt-2 text-sm text-gaming-text-secondary line-clamp-2 flex-grow">
           {excerpt}
         </p>
         

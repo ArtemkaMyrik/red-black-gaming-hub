@@ -55,12 +55,13 @@ const GameRecommendations = () => {
         
         <div className="grid grid-cols-1 gap-4">
           {recommendedGames.map((game) => (
-            <GameCard
-              key={game.id}
-              {...game}
-              variant="horizontal"
-              className="hover:translate-x-1 transition-transform duration-300"
-            />
+            <div key={game.id} className="h-[140px]">
+              <GameCard
+                {...game}
+                variant="horizontal"
+                className="hover:translate-x-1 transition-transform duration-300 h-full"
+              />
+            </div>
           ))}
         </div>
       </div>

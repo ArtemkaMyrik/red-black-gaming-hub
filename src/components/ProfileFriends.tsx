@@ -12,17 +12,16 @@ interface Friend {
   username: string;
   avatar?: string;
   status: 'online' | 'offline';
-  lastSeen?: string;
 }
 
 // Моковые данные
 const mockFriends: Friend[] = [
   { id: '1', username: 'РПГМастер', avatar: 'https://i.pravatar.cc/150?img=1', status: 'online' },
-  { id: '2', username: 'СтратегКиберспорта', avatar: 'https://i.pravatar.cc/150?img=2', status: 'offline', lastSeen: '2 часа назад' },
+  { id: '2', username: 'СтратегКиберспорта', avatar: 'https://i.pravatar.cc/150?img=2', status: 'offline' },
   { id: '3', username: 'ШутерПро', avatar: 'https://i.pravatar.cc/150?img=3', status: 'online' },
-  { id: '4', username: 'АдвенчурЛеди', avatar: 'https://i.pravatar.cc/150?img=4', status: 'offline', lastSeen: '1 день назад' },
+  { id: '4', username: 'АдвенчурЛеди', avatar: 'https://i.pravatar.cc/150?img=4', status: 'offline' },
   { id: '5', username: 'ИндиГеймер', status: 'online' },
-  { id: '6', username: 'СимуляторФан', avatar: 'https://i.pravatar.cc/150?img=6', status: 'offline', lastSeen: '5 минут назад' },
+  { id: '6', username: 'СимуляторФан', avatar: 'https://i.pravatar.cc/150?img=6', status: 'offline' },
 ];
 
 interface ProfileFriendsProps {
@@ -55,7 +54,15 @@ const ProfileFriends = ({ userId }: ProfileFriendsProps) => {
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <h2 className="text-xl font-bold">Друзья ({friends.length})</h2>
+        <h2 className="text-xl font-bold">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block mr-2 text-gaming-red">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          Друзья ({friends.length})
+        </h2>
         
         <div className="relative w-full md:w-64">
           <Input
@@ -98,8 +105,8 @@ const ProfileFriends = ({ userId }: ProfileFriendsProps) => {
                   <h3 className="font-medium">{friend.username}</h3>
                   <p className="text-xs text-gaming-text-secondary">
                     {friend.status === 'online' 
-                      ? 'В сети' 
-                      : `Был в сети: ${friend.lastSeen}`
+                      ? 'Онлайн' 
+                      : 'Не в сети'
                     }
                   </p>
                 </div>
