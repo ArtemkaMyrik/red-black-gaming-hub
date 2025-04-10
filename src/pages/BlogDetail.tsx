@@ -1,11 +1,13 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, Tag, Star } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Tag, ThumbsUp, ThumbsDown } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Separator } from '@/components/ui/separator';
 import BlogComments from '../components/BlogComments';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 // Имитация данных статьи
 const BLOG_ARTICLE = {
@@ -41,12 +43,15 @@ const BLOG_ARTICLE = {
   commentsCount: 42,
   category: 'Обзоры',
   tags: ['Открытый мир', 'Геймдизайн', 'Breath of the Wild', 'Skyrim', 'GTA'],
-  rating: 4.8
+  likes: 124,
+  dislikes: 12
 };
 
 const BlogDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [article, setArticle] = useState(BLOG_ARTICLE);
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
   
   // В реальном приложении здесь был бы запрос к API
   useEffect(() => {
@@ -56,6 +61,64 @@ const BlogDetail = () => {
     // Прокрутка к началу страницы при загрузке
     window.scrollTo(0, 0);
   }, [id]);
+  
+  // Функция для обработки лайка
+  const handleLike = () => {
+    if (liked) {
+      setArticle(prev => ({
+        ...prev,
+        likes: prev.likes - 1
+      }));
+      setLiked(false);
+      toast.info('Вы убрали свой лайк');
+    } else {
+      if (disliked) {
+        // Если был дизлайк, убираем его
+        setArticle(prev => ({
+          ...prev,
+          likes: prev.likes + 1,
+          dislikes: prev.dislikes - 1
+        }));
+        setDisliked(false);
+      } else {
+        setArticle(prev => ({
+          ...prev,
+          likes: prev.likes + 1
+        }));
+      }
+      setLiked(true);
+      toast.success('Вам понравилась статья!');
+    }
+  };
+  
+  // Функция для обработки дизлайка
+  const handleDislike = () => {
+    if (disliked) {
+      setArticle(prev => ({
+        ...prev,
+        dislikes: prev.dislikes - 1
+      }));
+      setDisliked(false);
+      toast.info('Вы убрали свой дизлайк');
+    } else {
+      if (liked) {
+        // Если был лайк, убираем его
+        setArticle(prev => ({
+          ...prev,
+          likes: prev.likes - 1,
+          dislikes: prev.dislikes + 1
+        }));
+        setLiked(false);
+      } else {
+        setArticle(prev => ({
+          ...prev,
+          dislikes: prev.dislikes + 1
+        }));
+      }
+      setDisliked(true);
+      toast.info('Вам не понравилась статья');
+    }
+  };
   
   // Если статья не найдена
   if (!article) {
@@ -113,19 +176,6 @@ const BlogDetail = () => {
               <Tag size={16} className="mr-1" />
               {article.category}
             </div>
-            
-            <div className="flex items-center">
-              <div className="flex mr-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    size={16}
-                    className={star <= Math.round(article.rating) ? "text-gaming-red fill-gaming-red" : "text-gaming-text-secondary"}
-                  />
-                ))}
-              </div>
-              <span>{article.rating.toFixed(1)}</span>
-            </div>
           </div>
           
           {/* Обложка статьи */}
@@ -143,6 +193,31 @@ const BlogDetail = () => {
               className="prose prose-invert prose-gaming max-w-none"
               dangerouslySetInnerHTML={{ __html: article.content }}
             />
+            
+            {/* Кнопки лайк/дизлайк */}
+            <div className="mt-8 flex items-center justify-center gap-6">
+              <Button 
+                onClick={handleLike}
+                variant={liked ? "default" : "outline"}
+                className={liked 
+                  ? "bg-gaming-red hover:bg-gaming-red/90" 
+                  : "border-gaming-red text-gaming-red hover:bg-gaming-red hover:text-white"}
+              >
+                <ThumbsUp className={liked ? "mr-2 fill-white" : "mr-2"} size={18} />
+                {article.likes}
+              </Button>
+              
+              <Button 
+                onClick={handleDislike}
+                variant="outline"
+                className={disliked 
+                  ? "bg-gaming-dark-accent text-white" 
+                  : "border-gaming-text-secondary text-gaming-text-secondary hover:bg-gaming-dark-accent hover:text-white"}
+              >
+                <ThumbsDown className={disliked ? "mr-2 fill-white" : "mr-2"} size={18} />
+                {article.dislikes}
+              </Button>
+            </div>
             
             {/* Теги */}
             <div className="mt-8">

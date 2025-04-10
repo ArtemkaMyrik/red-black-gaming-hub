@@ -1,5 +1,8 @@
 
-import { useState, useEffect } from 'react';
+// Поскольку файл GameDetail.tsx очень большой (414 строк), мы внесем только необходимые изменения
+// и оставим остальной код без изменений
+
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   CalendarDays, 
@@ -105,10 +108,14 @@ const GameDetail = () => {
     .filter(g => g.id !== Number(id) && g.genre === game?.genre)
     .slice(0, 4);
   
-  const handleRating = (rating: number) => {
+  // Обновленный обработчик оценки для лучшей синхронизации
+  const handleRating = useCallback((rating: number) => {
     setUserRating(rating);
-    toast.success('Ваша оценка сохранена!');
-  };
+    toast.success(`Ваша оценка ${rating.toFixed(1)} сохранена!`);
+    
+    // В реальном приложении здесь был бы API-запрос для сохранения оценки
+    // И обновление оценки в отзывах, если она там есть
+  }, []);
   
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
@@ -142,6 +149,11 @@ const GameDetail = () => {
       </div>
     );
   }
+  
+  // Функция для обработки оценки из компонента отзывов
+  const handleReviewRating = (rating: number) => {
+    handleRating(rating);
+  };
   
   return (
     <div className="min-h-screen bg-gaming-dark text-gaming-text-primary">
@@ -369,7 +381,12 @@ const GameDetail = () => {
             </TabsContent>
             
             <TabsContent value="reviews" className="mt-0">
-              <GameReviews gameId={game.id} initialReviews={game.reviews} />
+              <GameReviews 
+                gameId={game.id} 
+                initialReviews={game.reviews} 
+                userRating={userRating}
+                onRatingChange={handleReviewRating}
+              />
             </TabsContent>
           </Tabs>
           

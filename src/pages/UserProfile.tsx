@@ -21,7 +21,7 @@ interface UserProfileData {
   bio?: string;
   joinDate: string;
   friends: number;
-  games: number;
+  blogs: number;
   reviews: number;
 }
 
@@ -48,7 +48,7 @@ const UserProfile = () => {
         bio: 'Заядлый геймер и любитель RPG. Прошел все части Fallout, The Elder Scrolls и The Witcher.',
         joinDate: '12.06.2022',
         friends: 45,
-        games: 237,
+        blogs: 24,
         reviews: 28
       };
       
