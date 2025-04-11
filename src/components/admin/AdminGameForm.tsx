@@ -25,7 +25,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { PlusCircle, Trash2, Save, Image as ImageIcon, X } from "lucide-react";
+import { PlusCircle, Trash2, Save, Image as ImageIcon, X, Video } from "lucide-react";
 
 // Валидационная схема для формы игры
 const gameFormSchema = z.object({
@@ -47,12 +47,17 @@ const gameFormSchema = z.object({
   genre: z.string().min(1, {
     message: "Выберите жанр",
   }),
-  price: z.string().refine(val => !isNaN(Number(val)), {
-    message: "Цена должна быть числом",
-  }),
   platforms: z.array(z.string()).min(1, {
     message: "Выберите хотя бы одну платформу",
   }),
+  // Системные требования для PC
+  systemRequirements: z.object({
+    os: z.string().optional(),
+    processor: z.string().optional(),
+    memory: z.string().optional(),
+    graphics: z.string().optional(),
+    storage: z.string().optional(),
+  }).optional(),
 });
 
 type GameFormValues = z.infer<typeof gameFormSchema>;
@@ -85,6 +90,11 @@ interface GameImage {
   isCover: boolean;
 }
 
+interface GameVideo {
+  id: number;
+  url: string;
+}
+
 interface AdminGameFormProps {
   gameId?: number;
   gameData?: any;
@@ -99,6 +109,9 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
     { id: 2, url: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070", isCover: false },
   ]);
 
+  const [videos, setVideos] = useState<GameVideo[]>([]);
+  const [hasPCPlatform, setHasPCPlatform] = useState(false);
+
   const form = useForm<GameFormValues>({
     resolver: zodResolver(gameFormSchema),
     defaultValues: {
@@ -108,8 +121,14 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
       developer: "",
       publisher: "",
       genre: "",
-      price: "",
       platforms: [],
+      systemRequirements: {
+        os: "",
+        processor: "",
+        memory: "",
+        graphics: "",
+        storage: ""
+      },
     },
   });
 
@@ -125,16 +144,37 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
         developer: "CD Projekt RED",
         publisher: gameData.publisher || "",
         genre: "rpg",
-        price: "1999",
         platforms: ["pc", "ps5", "xbox-series"],
+        systemRequirements: {
+          os: "Windows 10 64-bit",
+          processor: "Intel Core i5-3570K or AMD FX-8310",
+          memory: "8 GB RAM",
+          graphics: "NVIDIA GeForce GTX 780 or AMD Radeon RX 470",
+          storage: "70 GB available space"
+        }
       };
       
       // Устанавливаем значения формы
       Object.entries(mockGameFullData).forEach(([key, value]) => {
         form.setValue(key as any, value);
       });
+      
+      // Проверяем, есть ли PC в списке платформ
+      setHasPCPlatform(mockGameFullData.platforms.includes("pc"));
     }
   }, [isEditMode, gameData, form]);
+
+  // Отслеживаем изменения в выбранных платформах
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === 'platforms') {
+        const platforms = value.platforms as string[] || [];
+        setHasPCPlatform(platforms.includes("pc"));
+      }
+    });
+    
+    return () => subscription.unsubscribe();
+  }, [form.watch]);
 
   const onSubmit = (values: GameFormValues) => {
     if (images.length === 0) {
@@ -151,6 +191,7 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
     const gameFormData = {
       ...values,
       images: images,
+      videos: videos,
     };
 
     if (isEditMode && onSave) {
@@ -174,6 +215,16 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
     setImages([...images, newImage]);
   };
 
+  const addVideoField = () => {
+    // В реальном приложении здесь была бы загрузка видео
+    const mockVideoUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+    const newVideo: GameVideo = {
+      id: Date.now(),
+      url: mockVideoUrl
+    };
+    setVideos([...videos, newVideo]);
+  };
+
   const removeImage = (id: number) => {
     const updatedImages = images.filter(img => img.id !== id);
     
@@ -183,6 +234,10 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
     }
     
     setImages(updatedImages);
+  };
+
+  const removeVideo = (id: number) => {
+    setVideos(videos.filter(video => video.id !== id));
   };
 
   const setCoverImage = (id: number) => {
@@ -252,26 +307,6 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
                       <Input 
                         {...field} 
                         type="date" 
-                        className="bg-gaming-dark border-white/10" 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Цена (₽)</FormLabel>
-                    <FormControl>
-                      <Input 
-                        {...field} 
-                        type="number" 
-                        min="0" 
-                        step="1" 
                         className="bg-gaming-dark border-white/10" 
                       />
                     </FormControl>
@@ -400,6 +435,87 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
             />
           </div>
           
+          {/* Системные требования для PC */}
+          {hasPCPlatform && (
+            <>
+              <Separator className="bg-white/10" />
+              
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Системные требования (PC)</h3>
+                
+                <FormField
+                  control={form.control}
+                  name="systemRequirements.os"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Операционная система</FormLabel>
+                      <FormControl>
+                        <Input {...field} className="bg-gaming-dark border-white/10" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="systemRequirements.processor"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Процессор</FormLabel>
+                      <FormControl>
+                        <Input {...field} className="bg-gaming-dark border-white/10" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="systemRequirements.memory"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Оперативная память</FormLabel>
+                      <FormControl>
+                        <Input {...field} className="bg-gaming-dark border-white/10" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="systemRequirements.graphics"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Видеокарта</FormLabel>
+                      <FormControl>
+                        <Input {...field} className="bg-gaming-dark border-white/10" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="systemRequirements.storage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Место на диске</FormLabel>
+                      <FormControl>
+                        <Input {...field} className="bg-gaming-dark border-white/10" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </>
+          )}
+          
           <Separator className="bg-white/10" />
           
           {/* Изображения */}
@@ -472,6 +588,59 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
                           Обложка
                         </div>
                       )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </FormItem>
+          </div>
+
+          {/* Видео */}
+          <Separator className="bg-white/10" />
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-medium">Видео</h3>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={addVideoField}
+                className="border-white/10"
+              >
+                <PlusCircle size={16} className="mr-2" />
+                Добавить видео
+              </Button>
+            </div>
+            
+            <FormItem>
+              <FormDescription>
+                Добавьте трейлеры и геймплейные видео игры.
+              </FormDescription>
+              
+              {videos.length === 0 ? (
+                <div className="border border-dashed border-white/20 rounded-md p-8 text-center bg-gaming-dark/50">
+                  <Video className="mx-auto h-12 w-12 text-white/30" />
+                  <p className="mt-2 text-sm text-gaming-text-secondary">
+                    Нет добавленных видео
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3 mt-3">
+                  {videos.map((video) => (
+                    <div key={video.id} className="bg-gaming-dark/50 rounded-md p-3 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Video size={20} className="text-gaming-text-secondary" />
+                        <span className="text-sm truncate max-w-[300px]">{video.url}</span>
+                      </div>
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={() => removeVideo(video.id)}
+                        className="text-gaming-text-secondary hover:text-red-500"
+                      >
+                        <Trash2 size={16} />
+                      </Button>
                     </div>
                   ))}
                 </div>

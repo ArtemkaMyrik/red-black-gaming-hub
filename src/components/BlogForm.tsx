@@ -60,6 +60,22 @@ const BlogForm = ({ blogId, onCancel }: BlogFormProps) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleImageUpload = () => {
+    // Для демонстрации - имитация загрузки изображения
+    setIsLoading(true);
+    setTimeout(() => {
+      setFormData(prev => ({
+        ...prev, 
+        imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070'
+      }));
+      setIsLoading(false);
+      toast({
+        title: "Изображение загружено",
+        description: "Изображение успешно добавлено в блог",
+      });
+    }, 1500);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -159,23 +175,15 @@ const BlogForm = ({ blogId, onCancel }: BlogFormProps) => {
         </div>
         
         <div>
-          <label htmlFor="imageUrl" className="block text-sm font-medium mb-1">
-            URL изображения
+          <label className="block text-sm font-medium mb-1">
+            Изображение
           </label>
           <div className="flex gap-2">
-            <Input
-              id="imageUrl"
-              name="imageUrl"
-              value={formData.imageUrl}
-              onChange={handleInputChange}
-              className="bg-gaming-card-bg border-white/10 focus:border-gaming-red"
-              placeholder="Введите URL изображения"
-              required
-            />
             <Button
               type="button"
               variant="outline"
-              className="border-white/10"
+              className="border-white/10 w-full"
+              onClick={handleImageUpload}
             >
               <Image size={16} className="mr-2" />
               Загрузить
