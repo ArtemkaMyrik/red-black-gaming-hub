@@ -13,7 +13,6 @@ interface Comment {
   text: string;
   date: string;
   likes: number;
-  replies?: Comment[];
 }
 
 interface BlogCommentsProps {
@@ -28,16 +27,7 @@ const BlogComments = ({ articleId }: BlogCommentsProps) => {
       userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1787&auto=format&fit=crop',
       text: 'Очень интересная статья! Я всегда считала, что именно Skyrim задал новый стандарт для открытых миров, хотя некоторые механики были не идеальными.',
       date: '19 апреля 2023',
-      likes: 12,
-      replies: [
-        {
-          id: 3,
-          user: 'Дмитрий Козлов',
-          text: 'Согласен насчет Skyrim, но я бы добавил, что именно The Witcher 3 поднял планку в плане проработанности второстепенных квестов.',
-          date: '19 апреля 2023',
-          likes: 8
-        }
-      ]
+      likes: 12
     },
     {
       id: 2,
@@ -77,44 +67,22 @@ const BlogComments = ({ articleId }: BlogCommentsProps) => {
     toast.success('Комментарий добавлен!');
   };
   
-  const handleLike = (commentId: number, isReply = false, parentId?: number) => {
-    if (isReply && parentId) {
-      setComments(
-        comments.map(comment => {
-          if (comment.id === parentId && comment.replies) {
-            return {
-              ...comment,
-              replies: comment.replies.map(reply => {
-                if (reply.id === commentId) {
-                  return { ...reply, likes: reply.likes + 1 };
-                }
-                return reply;
-              })
-            };
-          }
-          return comment;
-        })
-      );
-    } else {
-      setComments(
-        comments.map(comment => {
-          if (comment.id === commentId) {
-            return { ...comment, likes: comment.likes + 1 };
-          }
-          return comment;
-        })
-      );
-    }
+  const handleLike = (commentId: number) => {
+    setComments(
+      comments.map(comment => {
+        if (comment.id === commentId) {
+          return { ...comment, likes: comment.likes + 1 };
+        }
+        return comment;
+      })
+    );
     
     toast.success('Вам понравился этот комментарий!');
   };
   
   return (
     <div>
-      <h2 className="text-xl font-bold mb-6">Комментарии ({
-        comments.reduce((total, comment) => 
-          total + 1 + (comment.replies?.length || 0), 0)
-      })</h2>
+      <h2 className="text-xl font-bold mb-6">Комментарии ({comments.length})</h2>
       
       {/* Форма для добавления комментария */}
       <div className="mb-8 p-4 bg-gaming-card-bg rounded-md border border-white/5">
@@ -173,51 +141,8 @@ const BlogComments = ({ articleId }: BlogCommentsProps) => {
                     <Heart size={14} className={comment.likes > 0 ? "text-gaming-red fill-gaming-red" : ""} />
                     {comment.likes}
                   </button>
-                  
-                  <button className="flex items-center gap-1 text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors">
-                    <MessageSquare size={14} />
-                    Ответить
-                  </button>
                 </div>
               </div>
-              
-              {/* Ответы на комментарий */}
-              {comment.replies && comment.replies.length > 0 && (
-                <div className="ml-8 space-y-4">
-                  {comment.replies.map(reply => (
-                    <div key={reply.id} className="p-4 bg-gaming-dark-accent rounded-md">
-                      <div className="flex items-center mb-2">
-                        {reply.userAvatar ? (
-                          <img 
-                            src={reply.userAvatar} 
-                            alt={reply.user}
-                            className="w-8 h-8 rounded-full mr-3"
-                          />
-                        ) : (
-                          <div className="w-8 h-8 bg-gaming-dark rounded-full flex items-center justify-center text-xs font-bold mr-3">
-                            {reply.user.substring(0, 2).toUpperCase()}
-                          </div>
-                        )}
-                        
-                        <div>
-                          <div className="font-medium">{reply.user}</div>
-                          <div className="text-xs text-gaming-text-secondary">{reply.date}</div>
-                        </div>
-                      </div>
-                      
-                      <p className="mb-3">{reply.text}</p>
-                      
-                      <button 
-                        className="flex items-center gap-1 text-sm text-gaming-text-secondary hover:text-gaming-red transition-colors"
-                        onClick={() => handleLike(reply.id, true, comment.id)}
-                      >
-                        <Heart size={14} className={reply.likes > 0 ? "text-gaming-red fill-gaming-red" : ""} />
-                        {reply.likes}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           ))}
         </div>

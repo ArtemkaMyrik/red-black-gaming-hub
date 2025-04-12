@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, Tag, ThumbsUp, ThumbsDown } from 'lucide-react';
@@ -32,7 +31,7 @@ const BLOG_ARTICLE = {
     <p>Системы игры были спроектированы таким образом, чтобы поощрять экспериментирование и творческий подход к решению проблем. Это создало ощущение настоящей свободы и приключения, которого не хватало многим предыдущим играм с открытым миром.</p>
     
     <h2>Современные тенденции</h2>
-    <p>Сегодня мы видим, как разработчики экспериментируют с разными подходами к созданию открытых миров. Red Dead Redemption 2 делает акцент на реализме и детализации, создавая невероятно правдоподобную среду. Elden Ring сочетает свободу исследования из Breath of the Wild с фирменной сложностью FromSoftware, создавая уникальный опыт открытого мира.</p>
+    <p>Сегодня мы видим, как разработчики экспериментируют с разными подходами к созданию открытых миров. Red Dead Redemption 2 делает акцент на реализме и детализации, создавая невероятно пр��вдоподобную среду. Elden Ring сочетает свободу исследования из Breath of the Wild с фирменной сложностью FromSoftware, создавая уникальный опыт открытого мира.</p>
     
     <p>Будущее дизайна открытых миров выглядит многообещающим. С развитием технологий, особенно процедурной генерации и искусственного интеллекта, мы, вероятно, увидим еще более живые, динамичные и реагирующие на действия игрока миры.</p>
   `,
@@ -42,7 +41,6 @@ const BLOG_ARTICLE = {
   date: '18 апреля 2023',
   commentsCount: 42,
   category: 'Обзоры',
-  tags: ['Открытый мир', 'Геймдизайн', 'Breath of the Wild', 'Skyrim', 'GTA'],
   likes: 124,
   dislikes: 12
 };
@@ -217,21 +215,6 @@ const BlogDetail = () => {
                 <ThumbsDown className={disliked ? "mr-2 fill-white" : "mr-2"} size={18} />
                 {article.dislikes}
               </Button>
-            </div>
-            
-            {/* Теги */}
-            <div className="mt-8">
-              <h3 className="text-sm text-gaming-text-secondary mb-2">Теги:</h3>
-              <div className="flex flex-wrap gap-2">
-                {article.tags.map(tag => (
-                  <span 
-                    key={tag} 
-                    className="inline-block bg-gaming-card-bg text-gaming-text-secondary text-xs px-3 py-1 rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
             </div>
             
             {/* Информация об авторе */}

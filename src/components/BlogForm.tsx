@@ -16,7 +16,6 @@ interface BlogFormProps {
 
 interface BlogFormData {
   title: string;
-  excerpt: string;
   content: string;
   imageUrl: string;
   category: BlogCategory;
@@ -30,7 +29,6 @@ const BlogForm = ({ blogId, onCancel }: BlogFormProps) => {
   
   const [formData, setFormData] = useState<BlogFormData>({
     title: '',
-    excerpt: '',
     content: '',
     imageUrl: '',
     category: 'Новости'
@@ -46,7 +44,6 @@ const BlogForm = ({ blogId, onCancel }: BlogFormProps) => {
       setTimeout(() => {
         setFormData({
           title: 'Обзор Cyberpunk 2077 после всех обновлений',
-          excerpt: 'Стоит ли возвращаться в Найт-Сити после патчей и DLC? Разбираемся в изменениях.',
           content: 'Полный текст статьи...',
           imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070',
           category: 'Обзоры'
@@ -168,22 +165,6 @@ const BlogForm = ({ blogId, onCancel }: BlogFormProps) => {
             <option value="Советы">Советы</option>
             <option value="Индустрия">Индустрия</option>
           </select>
-        </div>
-        
-        <div>
-          <label htmlFor="excerpt" className="block text-sm font-medium mb-1">
-            Краткое описание
-          </label>
-          <Textarea
-            id="excerpt"
-            name="excerpt"
-            value={formData.excerpt}
-            onChange={handleInputChange}
-            className="bg-gaming-card-bg border-white/10 focus:border-gaming-red resize-none h-20"
-            placeholder="Введите краткое описание (до 160 символов)"
-            required
-            maxLength={160}
-          />
         </div>
         
         <div>

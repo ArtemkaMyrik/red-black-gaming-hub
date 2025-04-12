@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -16,8 +15,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 
 const Support = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   
@@ -25,7 +22,7 @@ const Support = () => {
     e.preventDefault();
     
     // Валидация формы
-    if (!name.trim() || !email.trim() || !subject.trim() || !message.trim()) {
+    if (!subject.trim() || !message.trim()) {
       toast.error('Пожалуйста, заполните все поля формы');
       return;
     }
@@ -34,8 +31,6 @@ const Support = () => {
     toast.success('Ваше сообщение отправлено. Мы ответим вам в ближайшее время.');
     
     // Очистка формы
-    setName('');
-    setEmail('');
     setSubject('');
     setMessage('');
   };
@@ -69,35 +64,6 @@ const Support = () => {
                 </div>
                 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium mb-1">
-                        Ваше имя
-                      </label>
-                      <Input
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="bg-gaming-dark border-white/10"
-                        placeholder="Введите ваше имя"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium mb-1">
-                        Email
-                      </label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="bg-gaming-dark border-white/10"
-                        placeholder="Введите ваш email"
-                      />
-                    </div>
-                  </div>
-                  
                   <div>
                     <label htmlFor="subject" className="block text-sm font-medium mb-1">
                       Тема обращения
