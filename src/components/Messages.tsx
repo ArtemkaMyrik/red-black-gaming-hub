@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -7,12 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageSquare, Search, Send, Paperclip } from 'lucide-react';
+import { MessageSquare, Search, Send } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
-// Типы и интерфейсы
 interface User {
   id: string;
   username: string;
@@ -36,8 +34,7 @@ interface Conversation {
   unreadCount: number;
 }
 
-// Моковые данные
-const currentUserId = '123'; // ID текущего пользователя
+const currentUserId = '123';
 const mockUsers: User[] = [
   { id: '1', username: 'РПГМастер', avatar: 'https://i.pravatar.cc/150?img=1', status: 'online' },
   { id: '2', username: 'СтратегКиберспорта', avatar: 'https://i.pravatar.cc/150?img=2', status: 'offline', lastSeen: '2 часа назад' },
@@ -60,7 +57,6 @@ const mockMessages: Message[] = [
   { id: '10', senderId: currentUserId, receiverId: '3', text: 'Да! Выглядит потрясающе!', timestamp: new Date('2023-11-08T12:10:00'), read: true },
 ];
 
-// Формируем беседы на основе пользователей и сообщений
 const createMockConversations = (): Conversation[] => {
   return mockUsers.map(user => {
     const userMessages = mockMessages.filter(
@@ -86,26 +82,22 @@ const Messages = () => {
   const [newMessage, setNewMessage] = useState('');
   const messageContainerRef = useRef<HTMLDivElement>(null);
   
-  // Получение активной беседы
   const activeConversation = conversations.find(
     conv => conv.user.id === activeConversationUserId
   );
   
-  // Автоматически выбираем первую беседу, если ни одна не выбрана
   useEffect(() => {
     if (!activeConversationUserId && conversations.length > 0 && isOpen) {
       setActiveConversationUserId(conversations[0].user.id);
     }
   }, [conversations, activeConversationUserId, isOpen]);
   
-  // Прокрутка сообщений вниз при изменении активной беседы или добавлении нового сообщения
   useEffect(() => {
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
     }
   }, [activeConversation, messageContainerRef]);
   
-  // Отправка нового сообщения
   const handleSendMessage = () => {
     if (!newMessage.trim() || !activeConversationUserId) return;
     
@@ -118,7 +110,6 @@ const Messages = () => {
       read: false
     };
     
-    // Обновляем состояние бесед
     setConversations(prevConversations => {
       return prevConversations.map(conv => {
         if (conv.user.id === activeConversationUserId) {
@@ -135,7 +126,6 @@ const Messages = () => {
     toast.success('Сообщение отправлено');
   };
   
-  // Форматирование даты сообщения
   const formatMessageDate = (date: Date) => {
     const now = new Date();
     const isToday = date.toDateString() === now.toDateString();
@@ -150,12 +140,10 @@ const Messages = () => {
     }
   };
   
-  // Получение общего количества непрочитанных сообщений
   const getTotalUnreadCount = () => {
     return conversations.reduce((total, conv) => total + conv.unreadCount, 0);
   };
   
-  // Фильтрация бесед по поисковому запросу
   const filteredConversations = searchQuery.trim() === '' 
     ? conversations 
     : conversations.filter(conv => 
@@ -182,7 +170,6 @@ const Messages = () => {
         </DialogHeader>
         
         <div className="flex flex-1 overflow-hidden">
-          {/* Список бесед */}
           <div className="w-80 border-r border-white/10 bg-gaming-dark-accent overflow-hidden flex flex-col">
             <div className="p-3 border-b border-white/10">
               <div className="relative">
@@ -254,11 +241,9 @@ const Messages = () => {
             </ScrollArea>
           </div>
           
-          {/* Окно сообщений */}
           <div className="flex flex-col flex-1">
             {activeConversation ? (
               <>
-                {/* Шапка беседы */}
                 <div className="p-3 border-b border-white/10 bg-gaming-dark-accent flex items-center">
                   <div className="relative">
                     <Avatar className="h-8 w-8 mr-3">
@@ -288,7 +273,6 @@ const Messages = () => {
                   </div>
                 </div>
                 
-                {/* Сообщения */}
                 <ScrollArea 
                   className="flex-1 p-4"
                   ref={messageContainerRef}
@@ -315,11 +299,7 @@ const Messages = () => {
                   </div>
                 </ScrollArea>
                 
-                {/* Поле ввода сообщения */}
                 <div className="p-3 border-t border-white/10 bg-gaming-dark-accent flex gap-2">
-                  <Button variant="ghost" size="icon" className="text-gaming-text-secondary">
-                    <Paperclip size={20} />
-                  </Button>
                   <Input
                     type="text"
                     placeholder="Введите сообщение..."

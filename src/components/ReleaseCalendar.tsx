@@ -162,7 +162,7 @@ const ReleaseCalendar = () => {
           
           <div className="p-3 flex justify-center border-t border-white/5">
             <a 
-              href="/releases"
+              href="/games?tab=upcoming"
               className="text-sm text-gaming-text-secondary hover:text-gaming-red flex items-center gap-1 transition-colors"
             >
               Полный календарь
