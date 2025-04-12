@@ -7,7 +7,7 @@ import { Search, Eye, CheckCircle, XCircle } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
-// Mock data with properly typed status
+// Mock data
 const mockReviews = [
   { 
     id: 1, 
@@ -16,7 +16,7 @@ const mockReviews = [
     rating: 4,
     text: 'Отличная игра, но много багов на старте. Сейчас все исправлено и играть одно удовольствие!',
     date: '15.01.2023',
-    status: 'approved' as const 
+    published: true
   },
   { 
     id: 2, 
@@ -25,7 +25,7 @@ const mockReviews = [
     rating: 5,
     text: 'Лучшая RPG всех времен! Невероятный сюжет, персонажи, музыка - все на высшем уровне.',
     date: '22.05.2022',
-    status: 'approved' as const 
+    published: true
   },
   { 
     id: 3, 
@@ -34,7 +34,7 @@ const mockReviews = [
     rating: 5,
     text: 'Шедевр от FromSoftware. Открытый мир внес свежесть в формулу соулс-игр.',
     date: '10.03.2022',
-    status: 'pending' as const 
+    published: false
   },
   { 
     id: 4, 
@@ -43,7 +43,7 @@ const mockReviews = [
     rating: 2,
     text: 'Слишком много багов и неудобный интерфейс. Не рекомендую к покупке.',
     date: '15.08.2023',
-    status: 'pending' as const 
+    published: false
   },
 ];
 
@@ -54,7 +54,7 @@ interface Review {
   rating: number;
   text: string;
   date: string;
-  status: 'approved' | 'pending' | 'rejected';
+  published: boolean;
 }
 
 const AdminReviews = () => {
@@ -71,9 +71,9 @@ const AdminReviews = () => {
   
   const approveReview = (id: number) => {
     setReviews(reviews.map(review => 
-      review.id === id ? { ...review, status: 'approved' as const } : review
+      review.id === id ? { ...review, published: true } : review
     ));
-    toast.success('Отзыв одобрен');
+    toast.success('Отзыв опубликован');
   };
   
   const deleteReview = (id: number) => {
@@ -133,7 +133,7 @@ const AdminReviews = () => {
                       >
                         <Eye size={16} />
                       </Button>
-                      {review.status === 'pending' && (
+                      {!review.published && (
                         <>
                           <Button
                             size="sm"
@@ -159,7 +159,7 @@ const AdminReviews = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
+                <TableCell colSpan={5} className="h-24 text-center">
                   Ничего не найдено.
                 </TableCell>
               </TableRow>
@@ -201,7 +201,7 @@ const AdminReviews = () => {
               </div>
               
               <div className="flex justify-end gap-2 pt-2">
-                {selectedReview.status === 'pending' && (
+                {!selectedReview.published && (
                   <>
                     <Button 
                       onClick={() => {
@@ -211,7 +211,7 @@ const AdminReviews = () => {
                       className="bg-green-600 hover:bg-green-700"
                     >
                       <CheckCircle size={16} className="mr-2" />
-                      Одобрить
+                      Опубликовать
                     </Button>
                     <Button 
                       onClick={() => {

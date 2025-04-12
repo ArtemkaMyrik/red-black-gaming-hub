@@ -7,39 +7,35 @@ import { Search, UserCog, Shield, Ban, User, BadgeCheck } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
-// Mock data with properly typed status and role
+// Mock data with properly typed role
 const mockUsers = [
   { 
     id: 1, 
     username: 'Игроман2000', 
     email: 'gamer2000@example.com',
     role: 'user' as const,
-    joinDate: '15.04.2023',
-    status: 'active' as const 
+    joinDate: '15.04.2023'
   },
   { 
     id: 2, 
     username: 'ProGamer', 
     email: 'progamer@example.com',
     role: 'moderator' as const,
-    joinDate: '10.01.2023',
-    status: 'active' as const 
+    joinDate: '10.01.2023'
   },
   { 
     id: 3, 
     username: 'GameReporter', 
     email: 'reporter@example.com',
     role: 'admin' as const,
-    joinDate: '05.12.2022',
-    status: 'active' as const 
+    joinDate: '05.12.2022'
   },
   { 
     id: 4, 
     username: 'ToxicPlayer', 
     email: 'toxic@example.com',
     role: 'user' as const,
-    joinDate: '20.07.2023',
-    status: 'banned' as const 
+    joinDate: '20.07.2023'
   },
 ];
 
@@ -49,7 +45,6 @@ interface User {
   email: string;
   role: 'user' | 'moderator' | 'admin';
   joinDate: string;
-  status: 'active' | 'banned';
 }
 
 const AdminUsers = () => {
@@ -66,18 +61,9 @@ const AdminUsers = () => {
   
   const banUser = (id: number) => {
     if (window.confirm('Вы уверены, что хотите заблокировать этого пользователя?')) {
-      setUsers(users.map(user => 
-        user.id === id ? { ...user, status: 'banned' as const } : user
-      ));
+      setUsers(users.filter(user => user.id !== id));
       toast.success('Пользователь заблокирован');
     }
-  };
-  
-  const unbanUser = (id: number) => {
-    setUsers(users.map(user => 
-      user.id === id ? { ...user, status: 'active' as const } : user
-    ));
-    toast.success('Пользователь разблокирован');
   };
   
   const changeRole = (id: number, newRole: 'user' | 'moderator' | 'admin') => {
@@ -120,7 +106,6 @@ const AdminUsers = () => {
               <TableHead className="hidden md:table-cell">Email</TableHead>
               <TableHead>Роль</TableHead>
               <TableHead className="hidden md:table-cell">Дата регистрации</TableHead>
-              <TableHead>Статус</TableHead>
               <TableHead className="text-right">Действия</TableHead>
             </TableRow>
           </TableHeader>
@@ -149,17 +134,6 @@ const AdminUsers = () => {
                     </span>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">{user.joinDate}</TableCell>
-                  <TableCell>
-                    <span className={`inline-flex px-2 py-1 rounded-full text-xs ${
-                      user.status === 'active' 
-                        ? 'bg-green-900/30 text-green-400' 
-                        : 'bg-red-900/30 text-red-400'
-                    }`}>
-                      {user.status === 'active' 
-                        ? 'Активен' 
-                        : 'Заблокирован'}
-                    </span>
-                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button
@@ -170,32 +144,21 @@ const AdminUsers = () => {
                       >
                         <UserCog size={16} />
                       </Button>
-                      {user.status === 'active' ? (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => banUser(user.id)}
-                          className="h-8 w-8 p-0 text-gaming-text-secondary hover:text-red-500"
-                        >
-                          <Ban size={16} />
-                        </Button>
-                      ) : (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => unbanUser(user.id)}
-                          className="h-8 w-8 p-0 text-gaming-text-secondary hover:text-green-500"
-                        >
-                          <User size={16} />
-                        </Button>
-                      )}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => banUser(user.id)}
+                        className="h-8 w-8 p-0 text-gaming-text-secondary hover:text-red-500"
+                      >
+                        <Ban size={16} />
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
+                <TableCell colSpan={5} className="h-24 text-center">
                   Ничего не найдено.
                 </TableCell>
               </TableRow>
@@ -224,12 +187,6 @@ const AdminUsers = () => {
                 <div>
                   <h3 className="text-sm font-medium text-gaming-text-secondary">Дата регистрации</h3>
                   <p>{selectedUser.joinDate}</p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-gaming-text-secondary">Статус</h3>
-                  <p className={selectedUser.status === 'active' ? 'text-green-400' : 'text-red-400'}>
-                    {selectedUser.status === 'active' ? 'Активен' : 'Заблокирован'}
-                  </p>
                 </div>
               </div>
               
@@ -270,29 +227,16 @@ const AdminUsers = () => {
               </div>
               
               <div className="flex justify-end gap-2 pt-2">
-                {selectedUser.status === 'active' ? (
-                  <Button 
-                    onClick={() => {
-                      banUser(selectedUser.id);
-                      setIsUserDialogOpen(false);
-                    }}
-                    className="bg-red-600 hover:bg-red-700"
-                  >
-                    <Ban size={16} className="mr-2" />
-                    Заблокировать
-                  </Button>
-                ) : (
-                  <Button 
-                    onClick={() => {
-                      unbanUser(selectedUser.id);
-                      setIsUserDialogOpen(false);
-                    }}
-                    className="bg-green-600 hover:bg-green-700"
-                  >
-                    <User size={16} className="mr-2" />
-                    Разблокировать
-                  </Button>
-                )}
+                <Button 
+                  onClick={() => {
+                    banUser(selectedUser.id);
+                    setIsUserDialogOpen(false);
+                  }}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  <Ban size={16} className="mr-2" />
+                  Удалить
+                </Button>
                 <Button 
                   variant="outline"
                   onClick={() => setIsUserDialogOpen(false)}

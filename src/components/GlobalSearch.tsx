@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -6,7 +5,6 @@ import {
   X, 
   Gamepad2, 
   FileText, 
-  Users, 
   User 
 } from 'lucide-react';
 import { 
@@ -22,7 +20,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 // Типы и интерфейсы
 interface SearchResult {
   id: string;
-  type: 'game' | 'blog' | 'user' | 'group';
+  type: 'game' | 'blog' | 'user';
   title: string;
   description?: string;
   image?: string;
@@ -107,14 +105,6 @@ const GlobalSearch = () => {
           url: '/profile/123'
         },
         {
-          id: '5',
-          type: 'group',
-          title: 'Фанаты Skyrim',
-          description: 'Группа для обсуждения всего, что связано с TES',
-          image: 'https://images.unsplash.com/photo-1551103782-8ab07afd45c1?q=80&w=1470',
-          url: '/groups/1'
-        },
-        {
           id: '6',
           type: 'blog',
           title: 'Топ 10 игр 2023 года',
@@ -162,8 +152,6 @@ const GlobalSearch = () => {
         return <FileText size={16} />;
       case 'user':
         return <User size={16} />;
-      case 'group':
-        return <Users size={16} />;
       default:
         return <Search size={16} />;
     }
@@ -194,7 +182,7 @@ const GlobalSearch = () => {
             <Input
               ref={searchInputRef}
               type="text"
-              placeholder="Поиск игр, блогов, пользователей, групп..."
+              placeholder="Поиск игр, блогов, пользователей..."
               value={searchQuery}
               onChange={handleQueryChange}
               className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent placeholder:text-gaming-text-secondary"
@@ -221,12 +209,11 @@ const GlobalSearch = () => {
             <div>
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <div className="px-4 pt-2">
-                  <TabsList className="grid grid-cols-5 w-full bg-gaming-dark-accent">
+                  <TabsList className="grid grid-cols-4 w-full bg-gaming-dark-accent">
                     <TabsTrigger value="all">Все</TabsTrigger>
                     <TabsTrigger value="game">Игры</TabsTrigger>
                     <TabsTrigger value="blog">Блоги</TabsTrigger>
                     <TabsTrigger value="user">Люди</TabsTrigger>
-                    <TabsTrigger value="group">Группы</TabsTrigger>
                   </TabsList>
                 </div>
                 
@@ -264,8 +251,7 @@ const GlobalSearch = () => {
                               <span className="font-medium">{result.title}</span>
                               <span className="text-xs px-2 py-0.5 bg-gaming-dark-accent rounded-full text-gaming-text-secondary">
                                 {result.type === 'game' ? 'Игра' : 
-                                 result.type === 'blog' ? 'Блог' : 
-                                 result.type === 'user' ? 'Пользователь' : 'Группа'}
+                                 result.type === 'blog' ? 'Блог' : 'Пользователь'}
                               </span>
                             </div>
                             {result.description && (
