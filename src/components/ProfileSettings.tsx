@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,8 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { 
-  User, Lock, Eye, BellRing, PencilLine, 
-  ShieldAlert, Save, Trash2, AlertTriangle, X
+  User, Lock, Eye, PencilLine, 
+  ShieldAlert, Save, Trash2, X
 } from 'lucide-react';
 
 interface ProfileSettingsProps {
@@ -33,11 +34,7 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
     oldPassword: '',
     newPassword: '',
     confirmPassword: '',
-    notifyComments: true,
-    notifyMessages: true,
-    notifyFriends: true,
-    profileVisibility: 'public',
-    messagePermission: 'friends'
+    profileVisibility: 'public'
   });
   
   const [avatar, setAvatar] = useState<string | undefined>(profile.avatar);
@@ -46,11 +43,6 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-  
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData(prev => ({ ...prev, [name]: checked }));
   };
   
   const handleRadioChange = (name: string, value: string) => {
@@ -79,10 +71,6 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
       newPassword: '',
       confirmPassword: ''
     }));
-  };
-  
-  const handleSaveNotifications = () => {
-    toast.success('Настройки уведомлений сохранены');
   };
   
   const handleSavePrivacy = () => {
@@ -121,7 +109,7 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
       <h2 className="text-xl font-bold mb-6">Настройки профиля</h2>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-2 md:grid-cols-4 mb-6">
+        <TabsList className="grid grid-cols-2 md:grid-cols-3 mb-6">
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <User size={16} />
             <span className="hidden md:inline">Профиль</span>
@@ -129,10 +117,6 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
           <TabsTrigger value="security" className="flex items-center gap-2">
             <Lock size={16} />
             <span className="hidden md:inline">Безопасность</span>
-          </TabsTrigger>
-          <TabsTrigger value="notifications" className="flex items-center gap-2">
-            <BellRing size={16} />
-            <span className="hidden md:inline">Уведомления</span>
           </TabsTrigger>
           <TabsTrigger value="privacy" className="flex items-center gap-2">
             <Eye size={16} />
@@ -330,84 +314,6 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="notifications" className="mt-0">
-          <Card className="bg-gaming-card-bg border-white/10">
-            <CardHeader>
-              <CardTitle>Уведомления</CardTitle>
-              <CardDescription>
-                Настройка предпочтений по уведомлениям
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium">Комментарии к отзывам</h4>
-                    <p className="text-sm text-gaming-text-secondary">
-                      Получать уведомления о новых комментариях к вашим отзывам
-                    </p>
-                  </div>
-                  <input
-                    type="checkbox"
-                    id="notifyComments"
-                    name="notifyComments"
-                    checked={formData.notifyComments}
-                    onChange={handleCheckboxChange}
-                    className="h-5 w-5 accent-gaming-red"
-                  />
-                </div>
-                
-                <Separator className="bg-white/10" />
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium">Личные сообщения</h4>
-                    <p className="text-sm text-gaming-text-secondary">
-                      Получать уведомления о новых личных сообщениях
-                    </p>
-                  </div>
-                  <input
-                    type="checkbox"
-                    id="notifyMessages"
-                    name="notifyMessages"
-                    checked={formData.notifyMessages}
-                    onChange={handleCheckboxChange}
-                    className="h-5 w-5 accent-gaming-red"
-                  />
-                </div>
-                
-                <Separator className="bg-white/10" />
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium">Запросы в друзья</h4>
-                    <p className="text-sm text-gaming-text-secondary">
-                      Получать уведомления о новых запросах в друзья
-                    </p>
-                  </div>
-                  <input
-                    type="checkbox"
-                    id="notifyFriends"
-                    name="notifyFriends"
-                    checked={formData.notifyFriends}
-                    onChange={handleCheckboxChange}
-                    className="h-5 w-5 accent-gaming-red"
-                  />
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                className="bg-gaming-red hover:bg-gaming-red-hover"
-                onClick={handleSaveNotifications}
-              >
-                <Save size={16} className="mr-2" />
-                Сохранить настройки
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        
         <TabsContent value="privacy" className="mt-0">
           <Card className="bg-gaming-card-bg border-white/10">
             <CardHeader>
@@ -467,64 +373,6 @@ const ProfileSettings = ({ userId, profile }: ProfileSettingsProps) => {
                       <span className="font-medium">Приватный</span>
                       <p className="text-sm text-gaming-text-secondary">
                         Ваш профиль скрыт от всех пользователей
-                      </p>
-                    </Label>
-                  </div>
-                </div>
-              </div>
-              
-              <Separator className="bg-white/10" />
-              
-              <div className="space-y-3">
-                <h3 className="font-medium">Личные сообщения</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <input
-                      type="radio"
-                      id="messageAll"
-                      name="messagePermission"
-                      checked={formData.messagePermission === 'all'}
-                      onChange={() => handleRadioChange('messagePermission', 'all')}
-                      className="mr-2 accent-gaming-red"
-                    />
-                    <Label htmlFor="messageAll" className="cursor-pointer">
-                      <span className="font-medium">От всех</span>
-                      <p className="text-sm text-gaming-text-secondary">
-                        Любой пользователь может отправить вам сообщение
-                      </p>
-                    </Label>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <input
-                      type="radio"
-                      id="messageFriends"
-                      name="messagePermission"
-                      checked={formData.messagePermission === 'friends'}
-                      onChange={() => handleRadioChange('messagePermission', 'friends')}
-                      className="mr-2 accent-gaming-red"
-                    />
-                    <Label htmlFor="messageFriends" className="cursor-pointer">
-                      <span className="font-medium">Только от друзей</span>
-                      <p className="text-sm text-gaming-text-secondary">
-                        Только друзья могут отправлять вам сообщения
-                      </p>
-                    </Label>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <input
-                      type="radio"
-                      id="messageNobody"
-                      name="messagePermission"
-                      checked={formData.messagePermission === 'nobody'}
-                      onChange={() => handleRadioChange('messagePermission', 'nobody')}
-                      className="mr-2 accent-gaming-red"
-                    />
-                    <Label htmlFor="messageNobody" className="cursor-pointer">
-                      <span className="font-medium">Ни от кого</span>
-                      <p className="text-sm text-gaming-text-secondary">
-                        Никто не может отправлять вам сообщения
                       </p>
                     </Label>
                   </div>

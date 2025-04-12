@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Eye, CheckCircle, XCircle, Trash } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Search, Eye, CheckCircle, XCircle } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
 // Mock data with properly typed status
@@ -76,13 +76,6 @@ const AdminReviews = () => {
     toast.success('Отзыв одобрен');
   };
   
-  const rejectReview = (id: number) => {
-    setReviews(reviews.map(review => 
-      review.id === id ? { ...review, status: 'rejected' as const } : review
-    ));
-    toast.success('Отзыв отклонен');
-  };
-  
   const deleteReview = (id: number) => {
     if (window.confirm('Вы уверены, что хотите удалить этот отзыв?')) {
       setReviews(reviews.filter(review => review.id !== id));
@@ -119,7 +112,6 @@ const AdminReviews = () => {
               <TableHead>Пользователь</TableHead>
               <TableHead className="hidden md:table-cell">Оценка</TableHead>
               <TableHead className="hidden md:table-cell">Дата</TableHead>
-              <TableHead>Статус</TableHead>
               <TableHead className="text-right">Действия</TableHead>
             </TableRow>
           </TableHeader>
@@ -131,21 +123,6 @@ const AdminReviews = () => {
                   <TableCell>{review.username}</TableCell>
                   <TableCell className="hidden md:table-cell">{review.rating}/5</TableCell>
                   <TableCell className="hidden md:table-cell">{review.date}</TableCell>
-                  <TableCell>
-                    <span className={`inline-flex px-2 py-1 rounded-full text-xs ${
-                      review.status === 'approved' 
-                        ? 'bg-green-900/30 text-green-400' 
-                        : review.status === 'rejected'
-                        ? 'bg-red-900/30 text-red-400'
-                        : 'bg-yellow-900/30 text-yellow-400'
-                    }`}>
-                      {review.status === 'approved' 
-                        ? 'Одобрено' 
-                        : review.status === 'rejected'
-                        ? 'Отклонено'
-                        : 'На проверке'}
-                    </span>
-                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button
@@ -169,21 +146,13 @@ const AdminReviews = () => {
                           <Button
                             size="sm"
                             variant="ghost"
-                            onClick={() => rejectReview(review.id)}
+                            onClick={() => deleteReview(review.id)}
                             className="h-8 w-8 p-0 text-red-500"
                           >
                             <XCircle size={16} />
                           </Button>
                         </>
                       )}
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => deleteReview(review.id)}
-                        className="h-8 w-8 p-0 text-gaming-text-secondary hover:text-red-500"
-                      >
-                        <Trash size={16} />
-                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -246,13 +215,13 @@ const AdminReviews = () => {
                     </Button>
                     <Button 
                       onClick={() => {
-                        rejectReview(selectedReview.id);
+                        deleteReview(selectedReview.id);
                         setIsReviewDialogOpen(false);
                       }}
                       className="bg-red-600 hover:bg-red-700"
                     >
                       <XCircle size={16} className="mr-2" />
-                      Отклонить
+                      Удалить
                     </Button>
                   </>
                 )}
