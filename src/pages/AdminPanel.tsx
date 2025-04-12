@@ -66,19 +66,7 @@ const AdminPanel = () => {
             
             <TabsContent value="games">
               {isAddingGame ? (
-                <>
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold">Добавление новой игры</h2>
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setIsAddingGame(false)}
-                      className="border-white/10"
-                    >
-                      Вернуться к списку
-                    </Button>
-                  </div>
-                  <AdminGameForm />
-                </>
+                <AdminGameForm onSave={() => setIsAddingGame(false)} />
               ) : (
                 <>
                   <div className="flex justify-end items-center mb-4">

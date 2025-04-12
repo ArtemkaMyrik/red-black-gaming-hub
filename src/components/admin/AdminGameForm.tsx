@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -103,6 +103,7 @@ interface AdminGameFormProps {
 
 const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
   const isEditMode = !!gameId;
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [images, setImages] = useState<GameImage[]>([
     { id: 1, url: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070", isCover: true },
@@ -110,6 +111,7 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
   ]);
 
   const [videos, setVideos] = useState<GameVideo[]>([]);
+  const [videoUrl, setVideoUrl] = useState<string>("");
   const [hasPCPlatform, setHasPCPlatform] = useState(false);
 
   const form = useForm<GameFormValues>({
@@ -205,24 +207,49 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
   };
 
   const addImageField = () => {
-    // В реальном приложении здесь была бы загрузка изображения
-    const mockImageUrl = "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?q=80&w=2070";
-    const newImage: GameImage = {
-      id: Date.now(),
-      url: mockImageUrl,
-      isCover: images.length === 0, // Первое добавленное изображение становится обложкой
-    };
-    setImages([...images, newImage]);
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      // В реальном приложении здесь был бы код для загрузки файла на сервер
+      // Сейчас используем заглушку для демонстрации
+      const mockImageUrl = "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?q=80&w=2070";
+      const newImage: GameImage = {
+        id: Date.now(),
+        url: mockImageUrl,
+        isCover: images.length === 0, // Первое добавленное изображение становится обложкой
+      };
+      setImages([...images, newImage]);
+    }
   };
 
   const addVideoField = () => {
-    // В реальном приложении здесь была бы загрузка видео
-    const mockVideoUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-    const newVideo: GameVideo = {
-      id: Date.now(),
-      url: mockVideoUrl
-    };
-    setVideos([...videos, newVideo]);
+    setVideoUrl("");
+    // Открываем поле для ввода URL видео
+    const newVideo = document.getElementById('video-input-container');
+    if (newVideo) {
+      newVideo.classList.remove('hidden');
+    }
+  };
+
+  const handleAddVideoUrl = () => {
+    if (videoUrl.trim()) {
+      const newVideo: GameVideo = {
+        id: Date.now(),
+        url: videoUrl.trim()
+      };
+      setVideos([...videos, newVideo]);
+      setVideoUrl("");
+      
+      // Скрываем поле после добавления
+      const inputContainer = document.getElementById('video-input-container');
+      if (inputContainer) {
+        inputContainer.classList.add('hidden');
+      }
+    }
   };
 
   const removeImage = (id: number) => {
@@ -531,6 +558,13 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
                 <PlusCircle size={16} className="mr-2" />
                 Добавить изображение
               </Button>
+              <input 
+                type="file" 
+                ref={fileInputRef}
+                className="hidden" 
+                accept="image/*"
+                onChange={handleFileSelect}
+              />
             </div>
             
             <FormItem>
@@ -616,6 +650,42 @@ const AdminGameForm = ({ gameId, gameData, onSave }: AdminGameFormProps) => {
               <FormDescription>
                 Добавьте трейлеры и геймплейные видео игры.
               </FormDescription>
+              
+              {/* Поле для ввода URL видео */}
+              <div id="video-input-container" className="space-y-3 mt-3 hidden">
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="text"
+                    value={videoUrl}
+                    onChange={(e) => setVideoUrl(e.target.value)}
+                    placeholder="Введите URL видео (например, с YouTube)"
+                    className="bg-gaming-dark border-white/10 flex-grow"
+                  />
+                  <Button 
+                    type="button"
+                    size="sm"
+                    onClick={handleAddVideoUrl}
+                    className="bg-gaming-red hover:bg-gaming-red/90"
+                    disabled={!videoUrl.trim()}
+                  >
+                    Добавить
+                  </Button>
+                  <Button 
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      const container = document.getElementById('video-input-container');
+                      if (container) {
+                        container.classList.add('hidden');
+                      }
+                      setVideoUrl("");
+                    }}
+                  >
+                    <X size={16} />
+                  </Button>
+                </div>
+              </div>
               
               {videos.length === 0 ? (
                 <div className="border border-dashed border-white/20 rounded-md p-8 text-center bg-gaming-dark/50">

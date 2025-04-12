@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Image, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -26,6 +26,7 @@ const BlogForm = ({ blogId, onCancel }: BlogFormProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const isEditMode = blogId !== undefined;
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [formData, setFormData] = useState<BlogFormData>({
     title: '',
@@ -61,19 +62,30 @@ const BlogForm = ({ blogId, onCancel }: BlogFormProps) => {
   };
 
   const handleImageUpload = () => {
-    // Для демонстрации - имитация загрузки изображения
-    setIsLoading(true);
-    setTimeout(() => {
-      setFormData(prev => ({
-        ...prev, 
-        imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070'
-      }));
-      setIsLoading(false);
-      toast({
-        title: "Изображение загружено",
-        description: "Изображение успешно добавлено в блог",
-      });
-    }, 1500);
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      // Для демонстрации - имитация загрузки изображения
+      setIsLoading(true);
+      
+      setTimeout(() => {
+        // В реальном приложении здесь был бы код для загрузки файла на сервер
+        setFormData(prev => ({
+          ...prev, 
+          imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070'
+        }));
+        setIsLoading(false);
+        toast({
+          title: "Изображение загружено",
+          description: "Изображение успешно добавлено в блог",
+        });
+      }, 1500);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -188,6 +200,13 @@ const BlogForm = ({ blogId, onCancel }: BlogFormProps) => {
               <Image size={16} className="mr-2" />
               Загрузить
             </Button>
+            <input 
+              type="file" 
+              ref={fileInputRef}
+              className="hidden" 
+              accept="image/*"
+              onChange={handleFileSelect}
+            />
           </div>
         </div>
         
