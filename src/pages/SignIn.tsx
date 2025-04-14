@@ -11,6 +11,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
+import { signIn } from '@/services/authService';
+import { createUser } from '@/utils/userUtils';
 
 // Схема валидации формы входа
 const formSchema = z.object({
@@ -38,12 +40,16 @@ const SignIn = () => {
     setError(null);
 
     try {
-      // Имитация запроса к серверу
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const { user, error: signInError } = await signIn(values.email, values.password);
       
-      // В реальном проекте здесь будет запрос к API для аутентификации
-      // Для демонстрации просто проверяем на тестовые данные
-      if (values.email === 'demo@example.com' && values.password === 'password123') {
+      if (signInError) {
+        setError(signInError);
+        return;
+      }
+      
+      if (user) {
+        // Сохраняем пользователя в локальное хранилище
+        createUser(user);
         toast.success('Успешный вход в систему');
         navigate('/');
       } else {

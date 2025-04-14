@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Mail, Lock, User, AlertCircle } from 'lucide-react';
 import { Checkbox } from "@/components/ui/checkbox";
+import { signUp } from '@/services/authService';
 
 // Схема валидации формы регистрации
 const formSchema = z.object({
@@ -54,13 +55,23 @@ const SignUp = () => {
     setError(null);
 
     try {
-      // Имитация запроса к серверу
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const { user, error: signUpError } = await signUp(
+        values.email,
+        values.password,
+        values.username
+      );
       
-      // В реальном проекте здесь будет запрос к API для регистрации пользователя
-      // Для демонстрации просто имитируем успешную регистрацию
-      toast.success('Регистрация прошла успешно! Теперь вы можете войти в свой аккаунт.');
-      navigate('/sign-in');
+      if (signUpError) {
+        setError(signUpError);
+        return;
+      }
+      
+      if (user) {
+        toast.success('Регистрация прошла успешно! Теперь вы можете войти в свой аккаунт.');
+        navigate('/sign-in');
+      } else {
+        setError('Произошла ошибка при регистрации. Пожалуйста, попробуйте снова.');
+      }
     } catch (err) {
       setError('Произошла ошибка при регистрации. Пожалуйста, попробуйте снова.');
     } finally {

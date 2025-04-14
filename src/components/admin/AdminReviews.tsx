@@ -1,85 +1,70 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Search, Eye, CheckCircle, XCircle } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-
-// Mock data
-const mockReviews = [
-  { 
-    id: 1, 
-    gameTitle: 'Cyberpunk 2077', 
-    username: 'Игроман2000',
-    rating: 4,
-    text: 'Отличная игра, но много багов на старте. Сейчас все исправлено и играть одно удовольствие!',
-    date: '15.01.2023',
-    published: true
-  },
-  { 
-    id: 2, 
-    gameTitle: 'The Witcher 3', 
-    username: 'FunkyGamer',
-    rating: 5,
-    text: 'Лучшая RPG всех времен! Невероятный сюжет, персонажи, музыка - все на высшем уровне.',
-    date: '22.05.2022',
-    published: true
-  },
-  { 
-    id: 3, 
-    gameTitle: 'Elden Ring', 
-    username: 'DarkSouls_Fan',
-    rating: 5,
-    text: 'Шедевр от FromSoftware. Открытый мир внес свежесть в формулу соулс-игр.',
-    date: '10.03.2022',
-    published: false
-  },
-  { 
-    id: 4, 
-    gameTitle: 'Baldur\'s Gate 3', 
-    username: 'RPG_Master',
-    rating: 2,
-    text: 'Слишком много багов и неудобный интерфейс. Не рекомендую к покупке.',
-    date: '15.08.2023',
-    published: false
-  },
-];
-
-interface Review {
-  id: number;
-  gameTitle: string;
-  username: string;
-  rating: number;
-  text: string;
-  date: string;
-  published: boolean;
-}
+import { fetchReviews, approveReview, deleteReview, Review } from '@/services/reviewsService';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const AdminReviews = () => {
-  const [reviews, setReviews] = useState<Review[]>(mockReviews);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
+  const queryClient = useQueryClient();
   
+  // Запрос списка отзывов с использованием React Query
+  const { data: reviews = [], isLoading, error } = useQuery({
+    queryKey: ['reviews'],
+    queryFn: fetchReviews
+  });
+
+  // Мутация для публикации отзыва
+  const approveMutation = useMutation({
+    mutationFn: (id: string) => approveReview(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      toast.success('Отзыв опубликован');
+    },
+    onError: (error) => {
+      console.error('Ошибка при публикации отзыва:', error);
+      toast.error('Не удалось опубликовать отзыв');
+    }
+  });
+
+  // Мутация для удаления отзыва
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteReview(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      toast.success('Отзыв удален');
+    },
+    onError: (error) => {
+      console.error('Ошибка при удалении отзыва:', error);
+      toast.error('Не удалось удалить отзыв');
+    }
+  });
+  
+  // Фильтрация отзывов
   const filteredReviews = reviews.filter(review => 
-    review.gameTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    review.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    review.text.toLowerCase().includes(searchQuery.toLowerCase())
+    (review.game_title?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+    (review.username?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+    (review.text?.toLowerCase() || '').includes(searchQuery.toLowerCase())
   );
   
-  const approveReview = (id: number) => {
-    setReviews(reviews.map(review => 
-      review.id === id ? { ...review, published: true } : review
-    ));
-    toast.success('Отзыв опубликован');
+  const handleApproveReview = (id: string) => {
+    approveMutation.mutate(id);
   };
   
-  const deleteReview = (id: number) => {
+  const handleDeleteReview = (id: string) => {
     if (window.confirm('Вы уверены, что хотите удалить этот отзыв?')) {
-      setReviews(reviews.filter(review => review.id !== id));
-      toast.success('Отзыв удален');
+      deleteMutation.mutate(id);
+      // Если открыт диалог с этим отзывом, закрываем его
+      if (selectedReview?.id === id) {
+        setIsReviewDialogOpen(false);
+      }
     }
   };
   
@@ -87,6 +72,17 @@ const AdminReviews = () => {
     setSelectedReview(review);
     setIsReviewDialogOpen(true);
   };
+
+  if (error) {
+    return (
+      <div className="bg-gaming-card-bg border border-white/10 rounded-lg p-6">
+        <div className="text-center py-8 text-red-500">
+          <p>Произошла ошибка при загрузке отзывов</p>
+          <p className="text-sm opacity-75">{(error as Error).message}</p>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="bg-gaming-card-bg border border-white/10 rounded-lg p-6">
@@ -116,13 +112,21 @@ const AdminReviews = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredReviews.length > 0 ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={5} className="h-24 text-center">
+                  Загрузка отзывов...
+                </TableCell>
+              </TableRow>
+            ) : filteredReviews.length > 0 ? (
               filteredReviews.map((review) => (
                 <TableRow key={review.id} className="hover:bg-gaming-dark-accent">
-                  <TableCell className="font-medium">{review.gameTitle}</TableCell>
-                  <TableCell>{review.username}</TableCell>
+                  <TableCell className="font-medium">{review.game_title || 'Без названия'}</TableCell>
+                  <TableCell>{review.username || 'Неизвестный пользователь'}</TableCell>
                   <TableCell className="hidden md:table-cell">{review.rating}/5</TableCell>
-                  <TableCell className="hidden md:table-cell">{review.date}</TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {new Date(review.created_at).toLocaleDateString('ru-RU')}
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button
@@ -138,7 +142,7 @@ const AdminReviews = () => {
                           <Button
                             size="sm"
                             variant="ghost"
-                            onClick={() => approveReview(review.id)}
+                            onClick={() => handleApproveReview(review.id)}
                             className="h-8 w-8 p-0 text-green-500"
                           >
                             <CheckCircle size={16} />
@@ -146,7 +150,7 @@ const AdminReviews = () => {
                           <Button
                             size="sm"
                             variant="ghost"
-                            onClick={() => deleteReview(review.id)}
+                            onClick={() => handleDeleteReview(review.id)}
                             className="h-8 w-8 p-0 text-red-500"
                           >
                             <XCircle size={16} />
@@ -179,11 +183,11 @@ const AdminReviews = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <h3 className="text-sm font-medium text-gaming-text-secondary">Игра</h3>
-                  <p>{selectedReview.gameTitle}</p>
+                  <p>{selectedReview.game_title || 'Без названия'}</p>
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-gaming-text-secondary">Пользователь</h3>
-                  <p>{selectedReview.username}</p>
+                  <p>{selectedReview.username || 'Неизвестный пользователь'}</p>
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-gaming-text-secondary">Оценка</h3>
@@ -191,7 +195,7 @@ const AdminReviews = () => {
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-gaming-text-secondary">Дата</h3>
-                  <p>{selectedReview.date}</p>
+                  <p>{new Date(selectedReview.created_at).toLocaleDateString('ru-RU')}</p>
                 </div>
               </div>
               
@@ -205,7 +209,7 @@ const AdminReviews = () => {
                   <>
                     <Button 
                       onClick={() => {
-                        approveReview(selectedReview.id);
+                        handleApproveReview(selectedReview.id);
                         setIsReviewDialogOpen(false);
                       }}
                       className="bg-green-600 hover:bg-green-700"
@@ -215,8 +219,7 @@ const AdminReviews = () => {
                     </Button>
                     <Button 
                       onClick={() => {
-                        deleteReview(selectedReview.id);
-                        setIsReviewDialogOpen(false);
+                        handleDeleteReview(selectedReview.id);
                       }}
                       className="bg-red-600 hover:bg-red-700"
                     >
