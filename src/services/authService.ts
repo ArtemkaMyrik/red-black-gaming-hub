@@ -60,7 +60,7 @@ export const signIn = async (email: string, password: string): Promise<{user: Us
         id: data.user.id,
         username: profileData?.username || data.user.email?.split('@')[0] || '',
         email: data.user.email || '',
-        avatar: profileData?.avatar,
+        avatar: profileData?.avatar || undefined,
         isAdmin: profileData?.is_admin || false,
         isModerator: profileData?.is_moderator || false
       };
@@ -111,7 +111,7 @@ export const getCurrentUser = async (): Promise<{user: User | null, error: strin
       id: userData.user.id,
       username: profileData?.username || userData.user.email?.split('@')[0] || '',
       email: userData.user.email || '',
-      avatar: profileData?.avatar,
+      avatar: profileData?.avatar || undefined,
       isAdmin: profileData?.is_admin || false,
       isModerator: profileData?.is_moderator || false
     };

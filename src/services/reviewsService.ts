@@ -21,8 +21,8 @@ export const fetchReviews = async (): Promise<Review[]> => {
     .from('reviews')
     .select(`
       *,
-      games:game_id (title),
-      profiles:user_id (username)
+      games (title),
+      profiles (username)
     `)
     .order('created_at', { ascending: false });
 
