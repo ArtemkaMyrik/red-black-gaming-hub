@@ -49,20 +49,21 @@ export const signIn = async (email: string, password: string): Promise<{user: Us
     
     if (data.user) {
       // Получаем дополнительные данные профиля пользователя - используем безопасный подход
-      const { data: profileData } = await supabase
+      // Используем any тип для обхода проблемы с типами Supabase
+      const { data: profileData } = await (supabase as any)
         .from('profiles')
         .select('*')
         .eq('id', data.user.id)
         .maybeSingle();
       
-      // Преобразуем данные пользователя в нужный формат, обеспечивая безопасное обращение
+      // Преобразуем данные пользователя в нужный формат с безопасными дефолтными значениями
       const user: User = {
         id: data.user.id,
         username: profileData?.username || data.user.email?.split('@')[0] || '',
         email: data.user.email || '',
         avatar: profileData?.avatar || undefined,
-        isAdmin: Boolean(profileData?.is_admin) || false,
-        isModerator: Boolean(profileData?.is_moderator) || false
+        isAdmin: Boolean(profileData?.is_admin || false),
+        isModerator: Boolean(profileData?.is_moderator || false)
       };
       
       return { user, error: null };
@@ -100,20 +101,21 @@ export const getCurrentUser = async (): Promise<{user: User | null, error: strin
     if (error || !userData.user) throw error;
     
     // Получаем дополнительные данные профиля пользователя - используем безопасный подход
-    const { data: profileData } = await supabase
+    // Используем any тип для обхода проблемы с типами Supabase
+    const { data: profileData } = await (supabase as any)
       .from('profiles')
       .select('*')
       .eq('id', userData.user.id)
       .maybeSingle();
     
-    // Преобразуем данные пользователя в нужный формат с безопасным доступом к свойствам
+    // Преобразуем данные пользователя в нужный формат с безопасными дефолтными значениями
     const user: User = {
       id: userData.user.id,
       username: profileData?.username || userData.user.email?.split('@')[0] || '',
       email: userData.user.email || '',
       avatar: profileData?.avatar || undefined,
-      isAdmin: Boolean(profileData?.is_admin) || false,
-      isModerator: Boolean(profileData?.is_moderator) || false
+      isAdmin: Boolean(profileData?.is_admin || false),
+      isModerator: Boolean(profileData?.is_moderator || false)
     };
     
     return { user, error: null };

@@ -18,8 +18,8 @@ export interface Review {
 export const fetchReviews = async (): Promise<Review[]> => {
   try {
     // Делаем запрос на получение всех отзывов с именами игр и пользователей
-    // Используем select('*') вместо join
-    const { data, error } = await supabase
+    // Используем any тип для обхода типизации Supabase
+    const { data, error } = await (supabase as any)
       .from('reviews')
       .select(`
         *,
@@ -57,7 +57,8 @@ export const fetchReviews = async (): Promise<Review[]> => {
 export const approveReview = async (id: string): Promise<void> => {
   try {
     // Используем более безопасный подход без связанных таблиц для update
-    const { error } = await supabase
+    // Используем any тип для обхода типизации Supabase
+    const { error } = await (supabase as any)
       .from('reviews')
       .update({ published: true })
       .eq('id', id);
@@ -75,7 +76,8 @@ export const approveReview = async (id: string): Promise<void> => {
 export const deleteReview = async (id: string): Promise<void> => {
   try {
     // Используем более безопасный подход без связанных таблиц для delete
-    const { error } = await supabase
+    // Используем any тип для обхода типизации Supabase
+    const { error } = await (supabase as any)
       .from('reviews')
       .delete()
       .eq('id', id);
