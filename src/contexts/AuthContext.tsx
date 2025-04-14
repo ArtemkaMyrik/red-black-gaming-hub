@@ -43,9 +43,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // Слушаем изменения состояния аутентификации
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (session) {
-          await checkUser();
-        } else {
+        // Обрабатываем события аутентификации
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          // Вместо того чтобы делать запрос внутри колбэка используем setTimeout для предотвращения блокировки
+          setTimeout(() => {
+            checkUser();
+          }, 0);
+        } else if (event === 'SIGNED_OUT') {
           setUser(null);
           setLoading(false);
         }

@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Mail, AlertCircle, ArrowLeft } from 'lucide-react';
+import { supabase } from "@/integrations/supabase/client";
 
 // Схема валидации формы восстановления пароля
 const formSchema = z.object({
@@ -36,14 +37,17 @@ const ForgotPassword = () => {
     setError(null);
 
     try {
-      // Имитация запроса к серверу
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
       
-      // В реальном проекте здесь будет запрос к API для отправки ссылки для сброса пароля
+      if (error) throw error;
+      
       setIsSubmitted(true);
       toast.success('Инструкции по восстановлению пароля отправлены на ваш email');
     } catch (err) {
       setError('Произошла ошибка при отправке инструкций. Пожалуйста, попробуйте снова.');
+      console.error('Ошибка сброса пароля:', err);
     } finally {
       setIsLoading(false);
     }
