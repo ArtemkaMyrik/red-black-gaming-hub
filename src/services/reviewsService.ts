@@ -16,57 +16,68 @@ export interface Review {
 }
 
 export const fetchReviews = async (): Promise<Review[]> => {
-  // Делаем запрос с JOIN-ами, чтобы получить название игры и имя пользователя
-  const { data, error } = await supabase
-    .from('reviews')
-    .select(`
-      *,
-      games (title),
-      profiles (username)
-    `)
-    .order('created_at', { ascending: false });
+  try {
+    // Делаем запрос на получение всех отзывов с именами игр и пользователей
+    const { data, error } = await supabase
+      .from('reviews')
+      .select('*, games:games(title), profiles:profiles(username)')
+      .order('created_at', { ascending: false });
 
-  if (error) {
+    if (error) {
+      console.error('Ошибка при получении отзывов:', error);
+      throw error;
+    }
+
+    // Преобразуем данные для соответствия интерфейсу Review
+    const reviews: Review[] = data.map((item: any) => ({
+      id: item.id,
+      game_id: item.game_id,
+      user_id: item.user_id,
+      rating: item.rating,
+      text: item.text,
+      published: item.published,
+      created_at: item.created_at,
+      updated_at: item.updated_at,
+      game_title: item.games?.title,
+      username: item.profiles?.username
+    }));
+
+    return reviews;
+  } catch (error) {
     console.error('Ошибка при получении отзывов:', error);
     throw error;
   }
-
-  // Преобразуем данные для соответствия интерфейсу Review
-  const reviews: Review[] = data.map((item: any) => ({
-    id: item.id,
-    game_id: item.game_id,
-    user_id: item.user_id,
-    rating: item.rating,
-    text: item.text,
-    published: item.published,
-    created_at: item.created_at,
-    updated_at: item.updated_at,
-    game_title: item.games?.title,
-    username: item.profiles?.username
-  }));
-
-  return reviews;
 };
 
 export const approveReview = async (id: string): Promise<void> => {
-  const { error } = await supabase
-    .from('reviews')
-    .update({ published: true })
-    .eq('id', id);
+  try {
+    const { error } = await supabase
+      .from('reviews')
+      .update({ published: true })
+      .eq('id', id);
 
-  if (error) {
+    if (error) {
+      console.error('Ошибка при публикации отзыва:', error);
+      throw error;
+    }
+  } catch (error) {
     console.error('Ошибка при публикации отзыва:', error);
     throw error;
   }
 };
 
 export const deleteReview = async (id: string): Promise<void> => {
-  const { error } = await supabase
-    .from('reviews')
-    .delete()
-    .eq('id', id);
+  try {
+    const { error } = await supabase
+      .from('reviews')
+      .delete()
+      .eq('id', id);
 
-  if (error) {
+    if (error) {
+      console.error('Ошибка при удалении отзыва:', error);
+      throw error;
+    }
+  } catch (error) {
     console.error('Ошибка при удалении отзыва:', error);
     throw error;
   }

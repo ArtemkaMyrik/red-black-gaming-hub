@@ -55,14 +55,14 @@ export const signIn = async (email: string, password: string): Promise<{user: Us
         .eq('id', data.user.id)
         .single();
       
-      // Преобразуем данные пользователя в нужный формат
+      // Преобразуем данные пользователя в нужный формат, обеспечивая безопасное обращение к возможно null полям
       const user: User = {
         id: data.user.id,
         username: profileData?.username || data.user.email?.split('@')[0] || '',
         email: data.user.email || '',
         avatar: profileData?.avatar || undefined,
-        isAdmin: profileData?.is_admin || false,
-        isModerator: profileData?.is_moderator || false
+        isAdmin: Boolean(profileData?.is_admin) || false,
+        isModerator: Boolean(profileData?.is_moderator) || false
       };
       
       return { user, error: null };
@@ -106,14 +106,14 @@ export const getCurrentUser = async (): Promise<{user: User | null, error: strin
       .eq('id', userData.user.id)
       .single();
     
-    // Преобразуем данные пользователя в нужный формат
+    // Преобразуем данные пользователя в нужный формат с безопасным доступом к свойствам
     const user: User = {
       id: userData.user.id,
       username: profileData?.username || userData.user.email?.split('@')[0] || '',
       email: userData.user.email || '',
       avatar: profileData?.avatar || undefined,
-      isAdmin: profileData?.is_admin || false,
-      isModerator: profileData?.is_moderator || false
+      isAdmin: Boolean(profileData?.is_admin) || false,
+      isModerator: Boolean(profileData?.is_moderator) || false
     };
     
     return { user, error: null };
