@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 
 export interface Profile {
@@ -7,6 +6,18 @@ export interface Profile {
   avatar: string | null;
   is_admin: boolean;
   is_moderator: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Game {
+  id: string;
+  title: string;
+  description: string | null;
+  cover_image: string | null;
+  release_date: string | null;
+  developer: string | null;
+  publisher: string | null;
   created_at: string;
   updated_at: string;
 }
