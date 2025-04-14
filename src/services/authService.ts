@@ -48,14 +48,14 @@ export const signIn = async (email: string, password: string): Promise<{user: Us
     if (error) throw error;
     
     if (data.user) {
-      // Получаем дополнительные данные профиля пользователя
+      // Получаем дополнительные данные профиля пользователя - используем безопасный подход
       const { data: profileData } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', data.user.id)
-        .single();
+        .maybeSingle();
       
-      // Преобразуем данные пользователя в нужный формат, обеспечивая безопасное обращение к возможно null полям
+      // Преобразуем данные пользователя в нужный формат, обеспечивая безопасное обращение
       const user: User = {
         id: data.user.id,
         username: profileData?.username || data.user.email?.split('@')[0] || '',
@@ -99,12 +99,12 @@ export const getCurrentUser = async (): Promise<{user: User | null, error: strin
     const { data: userData, error } = await supabase.auth.getUser();
     if (error || !userData.user) throw error;
     
-    // Получаем дополнительные данные профиля пользователя
+    // Получаем дополнительные данные профиля пользователя - используем безопасный подход
     const { data: profileData } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userData.user.id)
-      .single();
+      .maybeSingle();
     
     // Преобразуем данные пользователя в нужный формат с безопасным доступом к свойствам
     const user: User = {
