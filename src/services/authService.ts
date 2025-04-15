@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Profile } from "./profileService";
 
@@ -19,20 +18,29 @@ export interface User {
 export const signUp = async (
   email: string,
   password: string,
-  username: string
+  username: string,
+  firstName: string,
+  lastName: string
 ): Promise<AuthResponse> => {
   try {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { username }
+        data: { 
+          username,
+          first_name: firstName,
+          last_name: lastName
+        }
       }
     });
 
     if (error) throw error;
 
     if (data.user) {
+      // Send verification code after successful signup
+      await sendVerificationCode(email);
+      
       const profile = await getProfile(data.user.id);
       const user: User = mapProfileToUser(profile);
       return { user, error: null };

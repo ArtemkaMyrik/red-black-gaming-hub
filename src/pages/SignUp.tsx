@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -14,9 +13,10 @@ import { Mail, Lock, User, AlertCircle } from 'lucide-react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { signUp } from '@/services/authService';
 
-// Схема валидации формы регистрации
 const formSchema = z.object({
   username: z.string().min(3, { message: 'Имя пользователя должно содержать минимум 3 символа' }),
+  firstName: z.string().min(2, { message: 'Имя должно содержать минимум 2 символа' }),
+  lastName: z.string().min(2, { message: 'Фамилия должна содержать минимум 2 символа' }),
   email: z.string().email({ message: 'Введите корректный email адрес' }),
   password: z.string().min(6, { message: 'Пароль должен содержать минимум 6 символов' }),
   confirmPassword: z.string(),
@@ -42,6 +42,8 @@ const SignUp = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: '',
+      firstName: '',
+      lastName: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -58,7 +60,9 @@ const SignUp = () => {
       const { user, error: signUpError } = await signUp(
         values.email,
         values.password,
-        values.username
+        values.username,
+        values.firstName,
+        values.lastName
       );
       
       if (signUpError) {
@@ -67,8 +71,8 @@ const SignUp = () => {
       }
       
       if (user) {
-        toast.success('Регистрация прошла успешно! Теперь вы можете войти в свой аккаунт.');
-        navigate('/sign-in');
+        toast.success('Регистрация прошла успешно! Пожалуйста, подтвердите ваш email.');
+        navigate('/verify-email');
       } else {
         setError('Произошла ошибка при регистрации. Пожалуйста, попробуйте снова.');
       }
@@ -98,6 +102,46 @@ const SignUp = () => {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Имя</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 h-4 w-4 text-gaming-text-secondary" />
+                        <Input
+                          placeholder="Иван"
+                          className="pl-10 bg-gaming-dark border-white/10"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Фамилия</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 h-4 w-4 text-gaming-text-secondary" />
+                        <Input
+                          placeholder="Иванов"
+                          className="pl-10 bg-gaming-dark border-white/10"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="username"

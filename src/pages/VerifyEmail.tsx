@@ -5,11 +5,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { RefreshCw } from 'lucide-react';
+import { sendVerificationCode } from '@/services/profileService';
 
 const VerifyEmail = () => {
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
 
   const handleVerify = async () => {
@@ -61,6 +64,28 @@ const VerifyEmail = () => {
     }
   };
 
+  const handleResendCode = async () => {
+    setIsResending(true);
+    setError(null);
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast.error('Пользователь не авторизован');
+        return;
+      }
+
+      await sendVerificationCode(user.email!);
+      toast.success('Новый код отправлен на вашу почту');
+    } catch (err) {
+      setError('Ошибка при отправке кода');
+      console.error('Ошибка при отправке кода:', err);
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gaming-dark">
       <div className="w-full max-w-md p-8 space-y-6 bg-gaming-card-bg rounded-lg">
@@ -78,13 +103,24 @@ const VerifyEmail = () => {
         {error && (
           <p className="text-red-500 text-center">{error}</p>
         )}
-        <Button 
-          onClick={handleVerify} 
-          disabled={isLoading || code.length !== 6}
-          className="w-full"
-        >
-          {isLoading ? 'Проверка...' : 'Подтвердить'}
-        </Button>
+        <div className="space-y-4">
+          <Button 
+            onClick={handleVerify} 
+            disabled={isLoading || code.length !== 6}
+            className="w-full"
+          >
+            {isLoading ? 'Проверка...' : 'Подтвердить'}
+          </Button>
+          <Button 
+            onClick={handleResendCode} 
+            disabled={isResending}
+            variant="outline"
+            className="w-full"
+          >
+            <RefreshCw className={`mr-2 h-4 w-4 ${isResending ? 'animate-spin' : ''}`} />
+            {isResending ? 'Отправка...' : 'Отправить код повторно'}
+          </Button>
+        </div>
       </div>
     </div>
   );
