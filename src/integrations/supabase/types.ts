@@ -120,27 +120,36 @@ export type Database = {
         Row: {
           avatar: string | null
           created_at: string
+          first_name: string | null
           id: string
           is_admin: boolean | null
           is_moderator: boolean | null
+          is_verified: boolean | null
+          last_name: string | null
           updated_at: string
           username: string | null
         }
         Insert: {
           avatar?: string | null
           created_at?: string
+          first_name?: string | null
           id: string
           is_admin?: boolean | null
           is_moderator?: boolean | null
+          is_verified?: boolean | null
+          last_name?: string | null
           updated_at?: string
           username?: string | null
         }
         Update: {
           avatar?: string | null
           created_at?: string
+          first_name?: string | null
           id?: string
           is_admin?: boolean | null
           is_moderator?: boolean | null
+          is_verified?: boolean | null
+          last_name?: string | null
           updated_at?: string
           username?: string | null
         }
@@ -212,6 +221,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      verification_codes: {
+        Row: {
+          attempts: number | null
+          code: string
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          user_id: string
+          verified: boolean | null
+        }
+        Insert: {
+          attempts?: number | null
+          code: string
+          created_at?: string
+          email: string
+          expires_at: string
+          id?: string
+          user_id: string
+          verified?: boolean | null
+        }
+        Update: {
+          attempts?: number | null
+          code?: string
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          user_id?: string
+          verified?: boolean | null
+        }
+        Relationships: []
       }
     }
     Views: {

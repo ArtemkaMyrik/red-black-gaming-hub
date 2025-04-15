@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { PostgrestError } from '@supabase/supabase-js';
 import { Database } from "@/integrations/supabase/types";
@@ -123,5 +122,37 @@ export const toggleGameFavorite = async (gameId: string): Promise<ServiceRespons
   } catch (e) {
     console.error('Error toggling game favorite:', e);
     return { data: null, error: e as PostgrestError };
+  }
+};
+
+export const sendVerificationCode = async (email: string) => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      throw new Error('Пользователь не авторизован');
+    }
+
+    const response = await fetch('/functions/send-verification-code', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        email, 
+        userId: user.id 
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.error || 'Не удалось отправить код');
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Ошибка отправки кода:', error);
+    throw error;
   }
 };
